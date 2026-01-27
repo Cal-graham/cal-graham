@@ -162,6 +162,7 @@ const Projects: React.FC = () => {
   const linksRef = useRef<GraphLink[]>([]);
   const nodeElementsRef = useRef<Map<string, HTMLDivElement>>(new Map());
   const requestRef = useRef<number>(0);
+  const hoveredNodeIdRef = useRef<string | null>(null);
   
   // 3D State
   const rotationRef = useRef({ x: 0, y: 0 });
@@ -235,7 +236,8 @@ const Projects: React.FC = () => {
     if (viewMode !== '3d' || !containerRef.current) return;
     
     // Update Rotation (Ease towards target or auto-rotate)
-    if (!isDraggingRef.current) {
+    if (!isDraggingRef.current && !hoveredNodeIdRef.current) {
+        // Only auto-rotate if not dragging AND not hovering
         targetRotationRef.current.y += ROTATION_SPEED;
     }
     
@@ -255,6 +257,18 @@ const Projects: React.FC = () => {
         canvasRef.current.height = height;
     }
     if (ctx) ctx.clearRect(0, 0, width, height);
+
+    // Prepare Hover Data
+    const hoveredId = hoveredNodeIdRef.current;
+    const highlightedIds = new Set<string>();
+    
+    if (hoveredId) {
+        highlightedIds.add(hoveredId);
+        const hoveredNode = nodesRef.current.find(n => n.id === hoveredId);
+        if (hoveredNode) {
+            hoveredNode.relatedIds.forEach(id => highlightedIds.add(id));
+        }
+    }
 
     // Calculate Positions
     const sinX = Math.sin(rotationRef.current.x);
@@ -280,33 +294,71 @@ const Projects: React.FC = () => {
 
     // Draw Links
     if (ctx) {
-        ctx.strokeStyle = '#cbd5e1'; // slate-300
-        ctx.lineWidth = 2.5; // Made lines thicker
-        
         linksRef.current.forEach(link => {
             const source = projectedNodes.find(n => n.id === link.source);
             const target = projectedNodes.find(n => n.id === link.target);
             
             if (source && target) {
-                // Fade lines based on depth
-                const avgScale = (source.scale + target.scale) / 2;
-                ctx.globalAlpha = Math.max(0.2, avgScale - 0.3); // Fade distant lines
+                const isConnected = hoveredId && (link.source === hoveredId || link.target === hoveredId);
+                const isHoverMode = !!hoveredId;
+
                 ctx.beginPath();
                 ctx.moveTo(source.px, source.py);
                 ctx.lineTo(target.px, target.py);
+
+                if (isHoverMode) {
+                    if (isConnected) {
+                        ctx.strokeStyle = '#0ea5e9'; // Accent color
+                        ctx.lineWidth = 2.5;
+                        ctx.globalAlpha = 1;
+                    } else {
+                        ctx.strokeStyle = '#cbd5e1';
+                        ctx.lineWidth = 0.5;
+                        ctx.globalAlpha = 0.05; // Fade out unrelated lines
+                    }
+                } else {
+                    // Default View
+                    const avgScale = (source.scale + target.scale) / 2;
+                    ctx.strokeStyle = '#cbd5e1';
+                    ctx.lineWidth = 1.5;
+                    ctx.globalAlpha = Math.max(0.1, avgScale - 0.4); // Fade distant lines
+                }
                 ctx.stroke();
             }
         });
+        // Reset Alpha
         ctx.globalAlpha = 1;
     }
 
     // Update DOM Nodes
     projectedNodes.forEach(node => {
         const el = nodeElementsRef.current.get(node.id);
+        const isHoverMode = !!hoveredId;
+        const isHighlighted = highlightedIds.has(node.id);
+
         if (el) {
-            el.style.transform = `translate3d(${node.px}px, ${node.py}px, 0) scale(${node.scale})`;
-            el.style.zIndex = node.zIndex.toString();
-            el.style.opacity = Math.max(0.3, node.scale - 0.2).toString();
+            let scale = node.scale;
+            let opacity = Math.max(0.3, node.scale - 0.2);
+            let zIndex = node.zIndex;
+            let filter = 'none';
+
+            if (isHoverMode) {
+                if (isHighlighted) {
+                    scale *= 1.1;
+                    opacity = 1;
+                    zIndex = 1000; // Bring to front
+                } else {
+                    opacity = 0.1;
+                    filter = 'grayscale(100%) blur(2px)';
+                    zIndex = 0;
+                }
+            }
+
+            el.style.transform = `translate3d(${node.px}px, ${node.py}px, 0) scale(${scale})`;
+            el.style.zIndex = zIndex.toString();
+            el.style.opacity = opacity.toString();
+            el.style.filter = filter;
+            
             // Center element
             el.style.marginLeft = node.type === 'project' ? '-48px' : '-40px'; 
             el.style.marginTop = node.type === 'project' ? '-48px' : '-10px';
@@ -408,6 +460,8 @@ const Projects: React.FC = () => {
                     e.stopPropagation(); // Prevent drag start on click if possible, or handle nicely
                     handleNodeClick(node.id);
                 }}
+                onMouseEnter={() => { hoveredNodeIdRef.current = node.id; }}
+                onMouseLeave={() => { hoveredNodeIdRef.current = null; }}
                 className={`absolute top-0 left-0 will-change-transform flex items-center justify-center cursor-pointer transition-colors duration-200
                     ${node.type === 'project' ? 'w-24 h-24' : 'w-auto h-auto'}`}
               >

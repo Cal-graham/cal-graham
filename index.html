@@ -56,13 +56,6 @@
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.3);
       }
-      .animation-delay-2000 {
-        animation-delay: 2s;
-      }
-      .animation-delay-4000 {
-        animation-delay: 4s;
-      }
-      /* Error overlay styles */
       #error-overlay {
         display: none;
         position: fixed;
@@ -78,33 +71,49 @@
         overflow: auto;
       }
     </style>
+  <!-- Environment Shim: React sometimes needs process.env -->
+  <script>
+    window.process = { env: { NODE_ENV: 'production' } };
+  </script>
+  
   <script type="importmap">
 {
   "imports": {
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3"
+    "react": "https://esm.sh/react@18.2.0",
+    "react/": "https://esm.sh/react@18.2.0/",
+    "react-dom": "https://esm.sh/react-dom@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.292.0?deps=react@18.2.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
 </script>
-<!-- Global Error Handler: If the app crashes on load, show the error -->
-<script>
-  window.onerror = function(message, source, lineno, colno, error) {
-    const overlay = document.getElementById('error-overlay');
-    if (overlay) {
-      overlay.style.display = 'block';
-      overlay.innerHTML += `<h3>Error Detected:</h3><p>${message}</p><p>Source: ${source}:${lineno}</p><hr/>`;
+  <!-- Global Error Handler -->
+  <script>
+    function showError(title, message) {
+      const overlay = document.getElementById('error-overlay');
+      if (overlay) {
+        overlay.style.display = 'block';
+        overlay.innerHTML += `<div style="background:rgba(0,0,0,0.2);padding:1rem;margin-bottom:1rem;border:1px solid #7f1d1d;"><strong>${title}</strong><br/>${message}</div>`;
+      }
+      console.error(title, message);
     }
-  };
-</script>
-<!-- Babel Standalone: Allows browser to read JSX/TSX without a build step -->
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    window.onerror = function(message, source, lineno, colno, error) {
+      showError('Runtime Error', `${message} at ${source}:${lineno}`);
+    };
+    
+    window.addEventListener('unhandledrejection', function(event) {
+      showError('Import/Network Error', `Promise rejection: ${event.reason}`);
+    });
+  </script>
+  <!-- Babel Standalone -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
   <body>
     <div id="error-overlay"></div>
     <div id="root"></div>
-    <!-- Entry Point: Loads the React App -->
+    <!-- Entry Point -->
     <script type="text/babel" data-type="module" data-presets="react,typescript" src="./index.tsx"></script>
   </body>
 </html>

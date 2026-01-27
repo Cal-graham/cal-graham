@@ -39,3 +39,24 @@ export interface VolunteerItem {
   period: string;
   details: string[];
 }
+
+export type NodeType = 'project' | 'skill';
+
+export interface Point3D {
+  x: number;
+  y: number;
+  z: number;
+}
+
+export interface GraphNode extends Point3D {
+  id: string;
+  type: NodeType;
+  text: string;
+  img?: string;
+  relatedIds: string[];
+}
+
+export interface GraphLink {
+  source: string;
+  target: string;
+}

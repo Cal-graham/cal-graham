@@ -133,6 +133,15 @@ export const PROJECTS: ProjectItem[] = [
     hoverImageUrl: './3dprinter.jpg'
   },
   {
+    id: 'mqttlights',
+    title: 'MQTT Synchronous Lights',
+    categories: ['Fabrication', 'IoT', 'C'],
+    description: 'Used HiveMQ to create an example MQTT Pub/Sub system to synchronize 2 sets of lights using ESP8266 boards.',
+    technologies: ['Fabrication', 'IoT', 'C'],
+    imageUrl: './ESP8266.jpg',
+    hoverImageUrl: './ESP8266.jpg'
+  },
+  {
     id: 'camera',
     title: 'Camera Repair & Lens Adaptors',
     categories: ['Design'],
@@ -149,6 +158,24 @@ export const PROJECTS: ProjectItem[] = [
     technologies: ['Optics', 'Sensors', 'Data Collection'],
     imageUrl: './radiotele.jpg',
     hoverImageUrl: './radiotele.jpg'
+  },
+    {
+    id: 'headband',
+    title: '3D Printed Covid Faceshields',
+    categories: ['Design', 'Fabrication', 'Additive Manufacturing'],
+    description: 'Designed, fabricated, and donated 3D printed faceshields for local hospital staff during Covid-19 shortages.',
+    technologies: ['Design', 'Fabrication', 'Additive Manufacturing'],
+    imageUrl: './headband.jpg',
+    hoverImageUrl: './headband.jpg'
+  },
+  {
+    id: 'OutreachAI',
+    title: 'Internal Agentic AI Tools',
+    categories: ['Agentic AI', 'Python', 'REST API'],
+    description: 'Created an internal-facing Agentic AI tool to speed up and improve the rate at which potential clients are targeted .',
+    technologies: ['AgenticAI', 'Python', 'REST API'],
+    imageUrl: './headband.jpg',
+    hoverImageUrl: './headband.jpg'
   },
   {
     id: 'adcs',

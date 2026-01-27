@@ -1,11 +1,11 @@
 import React from 'react';
-import Navbar from './components/Navbar.tsx';
-import Hero from './components/Hero.tsx';
-import About from './components/About.tsx';
-import Experience from './components/Experience.tsx';
-import Projects from './components/Projects.tsx';
-import Skills from './components/Skills.tsx';
-import Footer from './components/Footer.tsx';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import About from './components/About';
+import Experience from './components/Experience';
+import Projects from './components/Projects';
+import Skills from './components/Skills';
+import Footer from './components/Footer';
 
 const App: React.FC = () => {
   return (

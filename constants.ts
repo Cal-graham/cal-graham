@@ -1,4 +1,4 @@
-import type { ExperienceItem, EducationItem, ProjectItem, SkillCategory, VolunteerItem } from './types.ts';
+import { ExperienceItem, EducationItem, ProjectItem, SkillCategory, VolunteerItem } from './types';
 
 export const SOCIAL_LINKS = {
   email: "c.graham@stroudinternational.com",

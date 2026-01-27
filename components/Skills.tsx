@@ -1,8 +1,8 @@
 import React from 'react';
-import Section from './Section';
-import { SKILLS } from '../constants';
+import Section from './Section.tsx';
+import { SKILLS } from '../constants.ts';
 import { Code2, Wrench, Languages } from 'lucide-react';
-import FadeIn from './FadeIn';
+import FadeIn from './FadeIn.tsx';
 
 const iconMap = {
   "Programming & Tech": <Code2 size={24} />,

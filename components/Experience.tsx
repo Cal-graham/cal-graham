@@ -1,8 +1,8 @@
 import React from 'react';
-import Section from './Section';
-import { EXPERIENCES } from '../constants';
+import Section from './Section.tsx';
+import { EXPERIENCES } from '../constants.ts';
 import { Briefcase, MapPin } from 'lucide-react';
-import FadeIn from './FadeIn';
+import FadeIn from './FadeIn.tsx';
 
 const Experience: React.FC = () => {
   return (

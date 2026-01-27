@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import Section from './Section';
-import { PROJECTS } from '../constants';
-import { ProjectItem } from '../types';
+import Section from './Section.tsx';
+import { PROJECTS } from '../constants.ts';
+import { ProjectItem } from '../types.ts';
 import { X, LayoutGrid, Network, ChevronRight } from 'lucide-react';
-import FadeIn from './FadeIn';
+import FadeIn from './FadeIn.tsx';
 
 // --- Types & Constants ---
 

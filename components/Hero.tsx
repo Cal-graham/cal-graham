@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowDown, FileText, Github, Linkedin, Mail } from 'lucide-react';
-import { SOCIAL_LINKS } from '../constants';
-import FadeIn from './FadeIn';
+import { SOCIAL_LINKS } from '../constants.ts';
+import FadeIn from './FadeIn.tsx';
 
 const Hero: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });

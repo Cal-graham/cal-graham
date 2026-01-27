@@ -1,8 +1,8 @@
 import React from 'react';
-import Section from './Section';
-import { ABOUT_TEXT, EDUCATION, VOLUNTEERING } from '../constants';
+import Section from './Section.tsx';
+import { ABOUT_TEXT, EDUCATION, VOLUNTEERING } from '../constants.ts';
 import { GraduationCap, HeartHandshake } from 'lucide-react';
-import FadeIn from './FadeIn';
+import FadeIn from './FadeIn.tsx';
 
 const About: React.FC = () => {
   return (

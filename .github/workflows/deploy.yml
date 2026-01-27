@@ -26,3 +26,4 @@ jobs:
         with:
           folder: dist # Vite builds into 'dist'. Use 'build' if using CRA.
           branch: gh-pages
+          clean: true

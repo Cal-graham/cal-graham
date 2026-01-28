@@ -107,73 +107,73 @@ export const SKILLS: SkillCategory[] = [
 export const PROJECTS: ProjectItem[] = [
   {
     id: 'espresso',
-    title: 'IoT Telemetry Espresso Machine',
-    categories: ['IoT', 'Python'],
+    title: 'IoT Espresso Machine',
+    categories: ['IoT', 'Python', 'Hardware'],
     description: 'Engineered a real-time sensor array integrated into an espresso machine. Developed a Raspberry Pi network interface (B.E.A.N.S.) to stream pressure telemetry for precise brew control.',
-    technologies: ['Python', 'IoT', 'Raspberry Pi', 'Sensors'],
+    technologies: ['Python', 'IoT', 'Hardware'],
     imageUrl: './profile.png',
     hoverImageUrl: './profile.png'
   },
   {
     id: 'climbing',
     title: 'Adjustable Climbing Wall',
-    categories: ['Design', 'Fabrication'],
-    description: 'Designed and fabricated a 300 sq ft adjustable climbing wall. Utilized SolidWorks for structural modeling and 3D printing for custom ergonomic hold manufacturing.',
-    technologies: ['SolidWorks', '3D Printing', 'Fabrication'],
+    categories: ['Fabrication', 'SolidWorks', 'Addative Manufacturing'],
+    description: 'Designed and fabricated a 300 sq ft adjustable climbing wall. Utilized SolidWorks for structural modeling and 3D printing for custom holds manufacturing.',
+    technologies: ['Fabrication', 'SolidWorks', 'Addative Manufacturing'],
     imageUrl: './climbing wall.jpg',
     hoverImageUrl: './climbing wall.jpg'
   },
   {
     id: 'printer',
     title: 'Networked 3D Printer Controller',
-    categories: ['Python', 'HTML'],
+    categories: ['Python', 'HTML', 'IoT'],
     description: 'Deployed and customized an Octoprint-based server for remote 3D printer management. Integrated custom electronics and server logic to enhance print reliability.',
-    technologies: ['Python', 'HTML', 'Octoprint', 'Hardware'],
+    technologies: ['Python', 'HTML', 'IoT'],
     imageUrl: './3dprinter.jpg',
     hoverImageUrl: './3dprinter.jpg'
   },
   {
     id: 'mqttlights',
     title: 'MQTT Synchronous Lights',
-    categories: ['Fabrication', 'IoT', 'C'],
+    categories: ['Hardware', 'IoT', 'C'],
     description: 'Used HiveMQ to create an example MQTT Pub/Sub system to synchronize 2 sets of lights using ESP8266 boards.',
-    technologies: ['Fabrication', 'IoT', 'C'],
+    technologies: ['Hardware', 'IoT', 'C'],
     imageUrl: './ESP8266.jpg',
     hoverImageUrl: './ESP8266.jpg'
   },
   {
     id: 'camera',
-    title: 'Camera Repair & Lens Adaptors',
-    categories: ['Design'],
+    title: 'Cameras - Adapting and Repairing Lenses',
+    categories: ['SolidWorks', 'Reclamation', 'Optics'],
     description: 'Reverse-engineered and repaired digital camera mechanisms. Designed 3D-printed adaptors to interface vintage film lenses with modern digital bodies.',
-    technologies: ['CAD', 'Repair', 'Optics'],
+    technologies: ['SolidWorks', 'Reclamation', 'Optics'],
     imageUrl: './adaptor.jpg',
     hoverImageUrl: './adaptor.jpg'
   },
   {
     id: 'eclipse',
-    title: 'Radio Telescope Array',
-    categories: ['Optics', 'Sensors'],
-    description: 'Designed optical geometry and sensor configuration for a low-cost radio telescope, successfully capturing data during the 2024 solar eclipse.',
-    technologies: ['Optics', 'Sensors', 'Data Collection'],
+    title: 'Radio Telescope Thesis',
+    categories: ['Optics', 'Data Collection', 'MatLab', 'SolidWorks'],
+    description: 'Designed optical geometry and sensor configuration for a low-cost radio telescope with the intention of capturing spacial eclipse data through cloud cover.',
+    technologies: ['Optics', 'Data Collection', 'MatLab', 'SolidWorks'],
     imageUrl: './radiotele.jpg',
     hoverImageUrl: './radiotele.jpg'
   },
     {
     id: 'headband',
     title: '3D Printed Covid Faceshields',
-    categories: ['Design', 'Fabrication', 'Additive Manufacturing'],
-    description: 'Designed, fabricated, and donated 3D printed faceshields for local hospital staff during Covid-19 shortages.',
-    technologies: ['Design', 'Fabrication', 'Additive Manufacturing'],
+    categories: ['SolidWorks', 'Fabrication', 'Additive Manufacturing'],
+    description: 'Designed, fabricated, and donated 200+ 3D printed faceshields for local hospital staff during Covid-19 shortages.',
+    technologies: ['SolidWorks', 'Fabrication', 'Additive Manufacturing'],
     imageUrl: './headband.jpg',
     hoverImageUrl: './headband.jpg'
   },
   {
     id: 'OutreachAI',
-    title: 'Internal Agentic AI Tools',
+    title: 'Agentic AI BD Tools',
     categories: ['Agentic AI', 'Python', 'REST API'],
-    description: 'Created an internal-facing Agentic AI tool to speed up and improve the rate at which potential clients are targeted .',
-    technologies: ['AgenticAI', 'Python', 'REST API'],
+    description: 'Created an internal-facing Agentic AI tool to improve the quality of client outreach.',
+    technologies: ['Agentic AI', 'Python', 'REST API'],
     imageUrl: './headband.jpg',
     hoverImageUrl: './headband.jpg'
   },
@@ -185,5 +185,14 @@ export const PROJECTS: ProjectItem[] = [
     technologies: ['Python', 'C', 'Control Systems', 'Hardware'],
     imageUrl: './attitudecontrol.jpg',
     hoverImageUrl: './attitudecontrol.jpg'
-  }
+  },
+  {
+    id: 'photoHistory',
+    title: 'Educational Photo Display',
+    categories: ['Python', 'AI', 'REST API'],
+    description: 'Created an application that leverages metadata and AI tools to create interesting and informative electronic postcards.',
+    technologies: ['Python', 'AI', 'REST API'],
+    imageUrl: './attitudecontrol.jpg',
+    hoverImageUrl: './attitudecontrol.jpg'
+  
 ];

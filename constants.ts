@@ -194,5 +194,5 @@ export const PROJECTS: ProjectItem[] = [
     technologies: ['Python', 'AI', 'REST API'],
     imageUrl: './attitudecontrol.jpg',
     hoverImageUrl: './attitudecontrol.jpg'
-  
+  }
 ];

@@ -111,7 +111,7 @@ export const PROJECTS: ProjectItem[] = [
     categories: ['IoT', 'Python', 'Hardware'],
     description: 'Engineered a real-time sensor array integrated into an espresso machine. Developed a Raspberry Pi network interface (B.E.A.N.S.) to stream pressure telemetry for precise brew control.',
     technologies: ['Python', 'IoT', 'Hardware'],
-    imageUrl: './profile.png',
+    imageUrl: 'https://cal-graham.github.io/cal-graham/profile.png',
     hoverImageUrl: './profile.png'
   },
   {

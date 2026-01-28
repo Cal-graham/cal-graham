@@ -7,7 +7,11 @@ export const SOCIAL_LINKS = {
   portfolio: "https://cal-graham.io"
 };
 
-export const ABOUT_TEXT = `I bridge the gap between technical engineering and high-level operations strategy. With a foundation in Engineering Physics and a track record in international consulting, I specialize in identifying inefficiencies and driving multi-million dollar improvements in industrial processes. Based in London (UK) with project experience across the EU and North America, I am driven by a commitment to sustainable efficiency—using data, physics, and technology to reduce waste and optimize performance. Outside of work, I am an avid rock climber, photographer, and coffee enthusiast.`;
+export const ABOUT_TEXT = `I thrive at the intersection of technical engineering and high-level operations strategy. With a foundation in Engineering Physics, I’ve spent my early career bridging the gap between complex industrial processes and bottom line operations impact.
+
+Based in London with experience across the EU and North America, I specialize in identifying hidden inefficiencies and turning them into multi-million dollar improvements. I’m at my best when I can align operational excellence with environmental stewardship—optimizing performance while actively reducing inefficiencies.
+
+When I’m not streamlining workflows, you’ll find me rock climbing, geeking out over new tech, or exploring stunning places ao I can take mediocre photos.`;
 
 export const EXPERIENCES: ExperienceItem[] = [
   {

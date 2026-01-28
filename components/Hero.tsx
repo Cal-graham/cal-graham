@@ -50,7 +50,7 @@ const Hero: React.FC = () => {
               <Github size={24} />
             </a>
             <a 
-              href="#" 
+              href="https://cal-graham.github.io/cal-graham/cal-graham.pdf" 
               className="flex items-center gap-2 px-6 py-3 rounded-full bg-cyan-600 hover:bg-cyan-500 text-white font-medium transition-all duration-300 shadow-lg shadow-cyan-900/20 hover:shadow-cyan-500/40 hover:-translate-y-1"
             >
               <FileText size={20} />

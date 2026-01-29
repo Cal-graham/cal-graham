@@ -7,11 +7,13 @@ export const SOCIAL_LINKS = {
   portfolio: "https://cal-graham.io"
 };
 
-export const ABOUT_TEXT = `I thrive at the intersection of technical engineering and high-level operations strategy. With a foundation in Engineering Physics, I’ve spent my early career bridging the gap between complex industrial processes and bottom line operations impact.
+export const ABOUT_TEXT = `I am an early-career professional who's passionate about new technologies, sustainable outcomes, and operational improvement. Leveraging my Engineering Physics background, I’ve worked as an Operations Consultant - bridging the gap between complex industrial processes and bottom line operations impact.
 
-Based in London with experience across the EU and North America, I specialize in identifying hidden inefficiencies and turning them into multi-million dollar improvements. I’m at my best when I can align operational excellence with environmental stewardship—optimizing performance while actively reducing inefficiencies.
+Currently based in London, with experience across the EU and North America, my work has been to find hidden inefficiencies and turn them into multi-million dollar improvements. I’m at my best when I can align operational excellence with environmental stewardship—optimizing performance while actively reducing inefficiencies.
 
-When I’m not streamlining workflows, you’ll find me rock climbing, geeking out over new tech, or exploring stunning places ao I can take mediocre photos.`;
+In addition to technical industrial processes, I get to exercise my interest in new technologies internally - managing IT for my organization and developing AgenticAI tools.
+
+When I’m not managing operations projects, you’ll find me rock climbing, geeking out over new tech, or exploring stunning places where I can take mediocre photos.`;
 
 export const EXPERIENCES: ExperienceItem[] = [
   {

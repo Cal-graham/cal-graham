@@ -150,9 +150,9 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'camera',
     title: 'Cameras - Adapting and Repairing Lenses',
-    categories: ['SolidWorks', 'Reclamation', 'Optics'],
+    categories: ['SolidWorks', 'Optics', 'Hardware'],
     description: 'Reverse-engineered and repaired digital camera mechanisms. Designed 3D-printed adaptors to interface vintage film lenses with modern digital bodies.',
-    technologies: ['SolidWorks', 'Reclamation', 'Optics'],
+    technologies: ['SolidWorks', 'Optics', 'Hardware'],
     imageUrl: './adaptor.jpg',
     hoverImageUrl: './adaptor.jpg'
   },
@@ -177,9 +177,9 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'OutreachAI',
     title: 'Agentic AI BD Tools',
-    categories: ['Agentic AI', 'Python', 'REST API'],
+    categories: ['Agentic AI', 'Python', 'REST API', 'GCP'],
     description: 'Created an internal-facing Agentic AI tool to improve the quality of client outreach.',
-    technologies: ['Agentic AI', 'Python', 'REST API'],
+    technologies: ['Agentic AI', 'Python', 'REST API', 'GCP'],
     imageUrl: './headband.jpg',
     hoverImageUrl: './headband.jpg'
   },
@@ -195,9 +195,9 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'photoHistory',
     title: 'Educational Photo Display',
-    categories: ['Python', 'AI', 'REST API'],
+    categories: ['Python', 'REST API'],
     description: 'Created an application that leverages metadata and AI tools to create interesting and informative electronic postcards.',
-    technologies: ['Python', 'AI', 'REST API'],
+    technologies: ['Python', 'REST API'],
     imageUrl: './attitudecontrol.jpg',
     hoverImageUrl: './attitudecontrol.jpg'
   }

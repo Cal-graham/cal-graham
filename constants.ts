@@ -4,7 +4,7 @@ export const SOCIAL_LINKS = {
   email: "c.graham@stroudinternational.com",
   linkedin: "https://linkedin.com/in/calum-graham",
   github: "https://github.com/cal-graham",
-  portfolio: "https://cal-graham.io"
+  portfolio: "https://cal-graham.github.io/cal-graham"
 };
 
 export const ABOUT_TEXT = `I am an early-career professional who's passionate about new technologies, operational improvement, and sustainable outcomes. Leveraging my Engineering Physics background, I’ve worked as an Operations Consultant - bridging the gap between complex industrial processes and bottom line operations impact.
@@ -114,91 +114,91 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'espresso',
     title: 'IoT Espresso Machine',
-    categories: ['IoT', 'Python', 'Hardware'],
-    description: 'Engineered a real-time sensor array integrated into an espresso machine. Developed a Raspberry Pi network interface (B.E.A.N.S.) to stream pressure telemetry for precise brew control.',
-    technologies: ['Python', 'IoT', 'Hardware'],
+    categories: ['IoT', 'Python-Flask', 'Data Analysis', 'Sensors', 'Networked Computing'],
+    description: 'Engineered a real-time sensor array integrated into an espresso machine. Developed a network interface in Python (Flask) to stream pressure telemetry for precise brew control.',
+    technologies: ['Software', 'IoT', 'Hardware'],
     imageUrl: 'https://cal-graham.github.io/cal-graham/profile.png',
     hoverImageUrl: './profile.png'
   },
   {
     id: 'climbing',
     title: 'Adjustable Climbing Wall',
-    categories: ['Fabrication', 'SolidWorks', 'Addative Manufacturing'],
+    categories: ['SolidWorks', '3D-Printing', 'Addative Manufacturing'],
     description: 'Designed and fabricated a 300 sq ft adjustable climbing wall. Utilized SolidWorks for structural modeling and 3D printing for custom holds manufacturing.',
-    technologies: ['Fabrication', 'SolidWorks', 'Addative Manufacturing'],
+    technologies: ['Fabrication', 'CAD'],
     imageUrl: './climbing wall.jpg',
     hoverImageUrl: './climbing wall.jpg'
   },
   {
     id: 'printer',
     title: 'Networked 3D Printer Controller',
-    categories: ['Python', 'HTML', 'IoT'],
+    categories: ['Python', 'HTML', 'CSS', 'IoT', 'Networking', 'Addative Manufacturing'],
     description: 'Deployed and customized an Octoprint-based server for remote 3D printer management. Integrated custom electronics and server logic to enhance print reliability.',
-    technologies: ['Python', 'HTML', 'IoT'],
+    technologies: ['Software', 'Hardware', 'IoT'],
     imageUrl: './3dprinter.jpg',
     hoverImageUrl: './3dprinter.jpg'
   },
   {
     id: 'mqttlights',
     title: 'MQTT Synchronous Lights',
-    categories: ['Hardware', 'IoT', 'C'],
-    description: 'Used HiveMQ to create an example MQTT Pub/Sub system to synchronize 2 sets of lights using ESP8266 boards.',
-    technologies: ['Hardware', 'IoT', 'C'],
+    categories: ['ESP8266', 'IoT-HiveMQ', 'C', 'Sensors', 'Networked Computing'],
+    description: 'Used HiveMQ to create an example MQTT Pub/Sub system to synchronize 2 sets of lights using ESP8266 boards. Created my own RLC circuit functioning as capacitive sensors for the light`s control.',
+    technologies: ['Hardware', 'IoT', 'Software'],
     imageUrl: './ESP8266.jpg',
     hoverImageUrl: './ESP8266.jpg'
   },
   {
     id: 'camera',
-    title: 'Cameras - Adapting and Repairing Lenses',
-    categories: ['SolidWorks', 'Optics', 'Hardware'],
+    title: 'Camera Repair',
+    categories: ['SolidWorks', 'Optics', 'Hardware-diagnosis', 'Reclamation', 'Addative Manufacturing'],
     description: 'Reverse-engineered and repaired digital camera mechanisms. Designed 3D-printed adaptors to interface vintage film lenses with modern digital bodies.',
-    technologies: ['SolidWorks', 'Optics', 'Hardware'],
+    technologies: ['CAD', 'Optics', 'Hardware'],
     imageUrl: './adaptor.jpg',
     hoverImageUrl: './adaptor.jpg'
   },
   {
     id: 'eclipse',
     title: 'Radio Telescope Thesis',
-    categories: ['Optics', 'Data Collection', 'MatLab', 'SolidWorks'],
-    description: 'Designed optical geometry and sensor configuration for a low-cost radio telescope with the intention of capturing spacial eclipse data through cloud cover.',
-    technologies: ['Optics', 'Data Collection', 'MatLab', 'SolidWorks'],
+    categories: ['Optical Design', 'MatLab', 'Python', 'SolidWorks', 'Research'],
+    description: 'Designed optical geometry and sensor configuration for a low-cost radio telescope with the intention of capturing spacial eclipse data through cloud cover. Created simulation to understand effective dynamic range given different design choices and use-cases.',
+    technologies: ['Optics', 'CAD', 'Simulation'],
     imageUrl: './radiotele.png',
     hoverImageUrl: './radiotele.png'
   },
     {
     id: 'headband',
-    title: '3D Printed Covid Faceshields',
-    categories: ['SolidWorks', 'Fabrication', 'Additive Manufacturing'],
+    title: 'Volunteering - Faceshields',
+    categories: ['SolidWorks', 'SketchUp', 'Additive Manufacturing', 'User-Oriented Design'],
     description: 'Designed, fabricated, and donated 200+ 3D printed faceshields for local hospital staff during Covid-19 shortages.',
-    technologies: ['SolidWorks', 'Fabrication', 'Additive Manufacturing'],
+    technologies: ['CAD', 'Fabrication'],
     imageUrl: './headband.jpg',
     hoverImageUrl: './headband.jpg'
   },
   {
     id: 'OutreachAI',
-    title: 'Agentic AI BD Tools',
-    categories: ['Agentic AI', 'Python', 'REST API', 'GCP'],
-    description: 'Created an internal-facing Agentic AI tool to improve the quality of client outreach.',
-    technologies: ['Agentic AI', 'Python', 'REST API', 'GCP'],
-    imageUrl: './headband.jpg',
-    hoverImageUrl: './headband.jpg'
+    title: 'Agentic AI Tools',
+    categories: ['Agentic AI', 'Python', 'REST API', 'Google Cloud Computing', 'Value-Driven Design'],
+    description: 'Created an internal-facing Agentic AI tool to improve the quality of client outreach. The tool runs on GCP (Google Cloud Compute), using AgenticAI to leverage tools such as TavilyAPI, automating a large portion of the client discovery process.',
+    technologies: ['Software', 'Design'],
+    imageUrl: './OutreachAI.jpg',
+    hoverImageUrl: './OutreachAI.jpg'
   },
   {
     id: 'adcs',
     title: 'Satellite Attitude Controller',
-    categories: ['Python', 'C'],
-    description: 'Developed firmware and hardware for a "1U" CubeSat reaction-wheel control system, implementing PID control logic for precise orientation stability.',
-    technologies: ['Python', 'C', 'Control Systems', 'Hardware'],
+    categories: ['Python', 'C', 'MatLab', 'Simulink', 'PID Control', 'SolidWorks', 'Addative Manufacturing', 'Hardware Design'],
+    description: 'Developed firmware and testbench hardware for a "1U" CubeSat reaction-wheel control system, implementing PID control logic for precise orientation stability. This includes Simulink and MatLab simulations and a 3D printed testbench with computational and electrical hardware required to run and test PID control systems in a single axis.',
+    technologies: ['Software', 'Control Systems', 'Hardware', 'Simulation', 'CAD'],
     imageUrl: './attitudecontrol.jpg',
     hoverImageUrl: './attitudecontrol.jpg'
   },
   {
-    id: 'photoHistory',
-    title: 'Educational Photo Display',
-    categories: ['Python', 'REST API'],
-    description: 'Created an application that leverages metadata and AI tools to create interesting and informative electronic postcards.',
-    technologies: ['Python', 'REST API'],
-    imageUrl: './attitudecontrol.jpg',
-    hoverImageUrl: './attitudecontrol.jpg'
+    id: 'VIAVIapp',
+    title: 'Lab Organizer',
+    categories: ['Python-Flask', 'User-Oriented Design', 'Networked Computing'],
+    description: 'Created an internal-facing tool to automate organization and tracking of customer and internal samples in Optical Telecom R&D laboratory. The tool passively scanned the lab network to locate and maintain last-known use for all samples.',
+    technologies: ['Software'],
+    imageUrl: './VIAVIcats.jpg',
+    hoverImageUrl: './VIAVIcats.jpg'
   }
 ];

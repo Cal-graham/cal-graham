@@ -54,7 +54,7 @@ const Hero: React.FC = () => {
               className="flex items-center gap-2 px-6 py-3 rounded-full bg-cyan-600 hover:bg-cyan-500 text-white font-medium transition-all duration-300 shadow-lg shadow-cyan-900/20 hover:shadow-cyan-500/40 hover:-translate-y-1"
             >
               <FileText size={20} />
-              <span href="https://cal-graham.github.io/cal-graham/cal-graham.pdf" target=”_blank”>Resume</span>
+              <span href="https://cal-graham.github.io/cal-graham/cal-graham.pdf" target="_blank">Resume</span>
             </a>
           </div>
         </FadeIn>

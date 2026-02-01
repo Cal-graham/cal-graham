@@ -162,8 +162,8 @@ export const PROJECTS: ProjectItem[] = [
     categories: ['Optics', 'Data Collection', 'MatLab', 'SolidWorks'],
     description: 'Designed optical geometry and sensor configuration for a low-cost radio telescope with the intention of capturing spacial eclipse data through cloud cover.',
     technologies: ['Optics', 'Data Collection', 'MatLab', 'SolidWorks'],
-    imageUrl: './radiotele.jpg',
-    hoverImageUrl: './radiotele.jpg'
+    imageUrl: './radiotele.png',
+    hoverImageUrl: './radiotele.png'
   },
     {
     id: 'headband',

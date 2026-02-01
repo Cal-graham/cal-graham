@@ -1,5 +1,5 @@
 name: Build and Deploy to GitHub Pages
- 
+
 on:
   push:
     branches:
@@ -20,11 +20,28 @@ jobs:
         run: |
           npm install
           npm run build
-          touch dist/.nojekyll
+
+      - name: Prepare Assets 📂
+        # This step MUST happen after build and before deploy
+        run: |
+          TARGET_DIR="dist"
+          
+          if [ -d "$TARGET_DIR" ]; then
+            echo "Target directory $TARGET_DIR exists. Injecting assets..."
+                        
+            # Add .nojekyll to prevent Jekyll from messing with your files
+            touch "$TARGET_DIR/.nojekyll"
+            
+            echo "Final check of dist/ contents:"
+            ls -R "$TARGET_DIR"
+          else
+            echo "Error: Directory $TARGET_DIR not found. Build might have failed or used a different folder name."
+            exit 1
+          fi
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist # Vite builds into 'dist'. Use 'build' if using CRA.
+          folder: dist
           branch: gh-pages
           clean: true

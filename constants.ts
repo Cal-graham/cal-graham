@@ -179,7 +179,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Agentic AI Tools',
     categories: ['Agentic AI', 'Python', 'REST API', 'Google Cloud Computing', 'Value-Driven Design'],
     description: 'Created an internal-facing Agentic AI tool to improve the quality of client outreach. The tool runs on GCP (Google Cloud Compute), using AgenticAI to leverage tools such as TavilyAPI, automating a large portion of the client discovery process.',
-    technologies: ['Software', 'Design'],
+    technologies: ['Software'],
     imageUrl: './OutreachAI.jpg',
     hoverImageUrl: './OutreachAI.jpg'
   },

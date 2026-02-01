@@ -6,7 +6,7 @@ import FadeIn from './FadeIn';
 import NodeCloud from './NodeCloud';
 
 // Control the spacing of the nodes in the 3D cloud
-const NODE_CLOUD_SCALE = 1.3; 
+const NODE_CLOUD_SCALE = 1.1; 
 
 // --- Helper for Image Fallback ---
 const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, title: string) => {

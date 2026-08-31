@@ -7,13 +7,13 @@ export const SOCIAL_LINKS = {
   portfolio: "https://cal-graham.github.io/cal-graham"
 };
 
-export const ABOUT_TEXT = `I am an early-career professional who's passionate about new technologies, operational improvement, and sustainable outcomes. Leveraging my Engineering Physics background, I’ve worked as an Operations Consultant - bridging the gap between complex industrial processes and bottom line operations impact.
+export const ABOUT_TEXT = `I am an early-career professional who's passionate about new technologies, sustainable outcomes, and operational improvement. Leveraging my Engineering Physics background, I work as an Operations Consultant - bridging the gap between complex industrial processes and bottom line operations impact.
 
-Currently based in London, with experience across the EU and North America, my work has been to find hidden inefficiencies and turn them into multi-million dollar improvements. I’m at my best when I can align operational excellence with environmental stewardship—optimizing performance while actively reducing inefficiencies.
+Currently based in Toronto, with experience across the EU and North America, my work has been to find hidden inefficiencies and turn them into multi-million dollar improvements.
 
-In addition to technical industrial processes, I get to exercise my interest in new technologies internally - managing IT for my organization and developing AgenticAI tools.
+In addition to technical industrial processes, I get to exercise my interest in new technologies internally - managing IT for my organization and developing AI-enabled software tools for internal business and clients.
 
-When I’m not managing operations projects, you’ll find me rock climbing, geeking out over new tech, or exploring stunning places where I can take mediocre photos.`;
+When I’m not running operational improvement projects you’ll find me rock climbing, hobbying with new tech, or travelling and taking photos.`;
 
 export const EXPERIENCES: ExperienceItem[] = [
   {

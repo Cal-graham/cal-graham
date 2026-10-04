@@ -11,9 +11,11 @@ const About: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Main Bio */}
           <div className="md:col-span-2 space-y-6">
-            <p className="text-lg text-slate-600 leading-relaxed">
-              {ABOUT_TEXT}
-            </p>
+            {ABOUT_TEXT.split(/\n\s*\n/).map((paragraph, index) => (
+              <p key={index} className="text-lg text-slate-600 leading-relaxed">
+                {paragraph}
+              </p>
+            ))}
             
             <div className="mt-8">
               <h3 className="text-xl font-semibold flex items-center gap-2 mb-4 text-slate-800">

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { FileText, Github, Linkedin, Mail } from 'lucide-react';
+import React from 'react';
+import { Camera, FileText, Github, Linkedin, Mail } from 'lucide-react';
 import { SOCIAL_LINKS } from '../constants';
 import FadeIn from './FadeIn';
 import NodeCloud from './NodeCloud';
@@ -49,12 +49,24 @@ const Hero: React.FC = () => {
             >
               <Github size={24} />
             </a>
+            <a
+              href={SOCIAL_LINKS.photos}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-full bg-slate-800/80 backdrop-blur-sm hover:bg-slate-700 hover:text-cyan-400 transition-all duration-300 hover:scale-110 shadow-lg"
+              aria-label="Travel photos"
+              title="Travel photos"
+            >
+              <Camera size={24} />
+            </a>
             <a 
-              href="./cal-graham.pdf" 
+              href="./cal-graham.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-2 px-6 py-3 rounded-full bg-cyan-600 hover:bg-cyan-500 text-white font-medium transition-all duration-300 shadow-lg shadow-cyan-900/20 hover:shadow-cyan-500/40 hover:-translate-y-1"
             >
               <FileText size={20} />
-              <span href="https://cal-graham.github.io/cal-graham/cal-graham.pdf" target="_blank">Resume</span>
+              <span>Resume</span>
             </a>
           </div>
         </FadeIn>

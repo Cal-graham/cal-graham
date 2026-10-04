@@ -1,9 +1,10 @@
 import { ExperienceItem, EducationItem, ProjectItem, SkillCategory, VolunteerItem } from './types';
 
 export const SOCIAL_LINKS = {
-  email: "c.graham@stroudinternational.com",
+  email: "17ceg5@queensu.ca",
   linkedin: "https://linkedin.com/in/calum-graham",
   github: "https://github.com/cal-graham",
+  photos: "https://decisive-mapper-306615.web.app/",
   portfolio: "https://cal-graham.github.io/cal-graham"
 };
 
@@ -98,11 +99,15 @@ export const VOLUNTEERING: VolunteerItem[] = [
 export const SKILLS: SkillCategory[] = [
   {
     category: "Programming & Tech",
-    items: ["Python", "MATLAB/Simulink", "C", "Javascript", "HTML", "Git", "IoT"]
+    items: ["Python", "Flask", "Agentic AI & LLM Tooling", "Google Cloud (GCP)", "MATLAB/Simulink", "C / Embedded C", "JavaScript", "Git", "IoT", "MQTT", "ESP8266"]
+  },
+  {
+    category: "Operations & Consulting",
+    items: ["Lean / Six Sigma", "Process Mapping", "Carbon Accounting", "Data Analysis"]
   },
   {
     category: "Engineering & Design",
-    items: ["SolidWorks", "3D Printing", "Optical Engineering", "Control Theory", "Data Analysis"]
+    items: ["SolidWorks", "3D Printing", "Optical Engineering", "Control Theory"]
   },
   {
     category: "Languages",
@@ -111,69 +116,6 @@ export const SKILLS: SkillCategory[] = [
 ];
 
 export const PROJECTS: ProjectItem[] = [
-  {
-    id: 'espresso',
-    title: 'IoT Espresso Machine',
-    categories: ['IoT', 'Python-Flask', 'Data Analysis', 'Sensors', 'Networked Computing'],
-    description: 'Engineered a real-time sensor array integrated into an espresso machine. Developed a network interface in Python (Flask) to stream pressure telemetry for precise brew control.',
-    technologies: ['Software', 'IoT', 'Hardware'],
-    imageUrl: 'https://cal-graham.github.io/cal-graham/profile.png',
-    hoverImageUrl: './profile.png'
-  },
-  {
-    id: 'climbing',
-    title: 'Adjustable Climbing Wall',
-    categories: ['SolidWorks', '3D-Printing', 'Addative Manufacturing'],
-    description: 'Designed and fabricated a 300 sq ft adjustable climbing wall. Utilized SolidWorks for structural modeling and 3D printing for custom holds manufacturing.',
-    technologies: ['Fabrication', 'CAD'],
-    imageUrl: './climbing wall.jpg',
-    hoverImageUrl: './climbing wall.jpg'
-  },
-  {
-    id: 'printer',
-    title: 'Networked 3D Printer Controller',
-    categories: ['Python', 'HTML', 'CSS', 'IoT', 'Networking', 'Addative Manufacturing'],
-    description: 'Deployed and customized an Octoprint-based server for remote 3D printer management. Integrated custom electronics and server logic to enhance print reliability.',
-    technologies: ['Software', 'Hardware', 'IoT'],
-    imageUrl: './3dprinter.jpg',
-    hoverImageUrl: './3dprinter.jpg'
-  },
-  {
-    id: 'mqttlights',
-    title: 'MQTT Synchronous Lights',
-    categories: ['ESP8266', 'IoT-HiveMQ', 'C', 'Sensors', 'Networked Computing'],
-    description: 'Used HiveMQ to create an example MQTT Pub/Sub system to synchronize 2 sets of lights using ESP8266 boards. Created my own RLC circuit functioning as capacitive sensors for the light`s control.',
-    technologies: ['Hardware', 'IoT', 'Software'],
-    imageUrl: './ESP8266.jpg',
-    hoverImageUrl: './ESP8266.jpg'
-  },
-  {
-    id: 'camera',
-    title: 'Camera Repair',
-    categories: ['SolidWorks', 'Optics', 'Hardware-diagnosis', 'Reclamation', 'Addative Manufacturing'],
-    description: 'Reverse-engineered and repaired digital camera mechanisms. Designed 3D-printed adaptors to interface vintage film lenses with modern digital bodies.',
-    technologies: ['CAD', 'Optics', 'Hardware'],
-    imageUrl: './adaptor.jpg',
-    hoverImageUrl: './adaptor.jpg'
-  },
-  {
-    id: 'eclipse',
-    title: 'Radio Telescope Thesis',
-    categories: ['Optical Design', 'MatLab', 'Python', 'SolidWorks', 'Research'],
-    description: 'Designed optical geometry and sensor configuration for a low-cost radio telescope with the intention of capturing spacial eclipse data through cloud cover. Created simulation to understand effective dynamic range given different design choices and use-cases.',
-    technologies: ['Optics', 'CAD', 'Simulation'],
-    imageUrl: './radiotele.png',
-    hoverImageUrl: './radiotele.png'
-  },
-    {
-    id: 'headband',
-    title: 'Volunteering - Faceshields',
-    categories: ['SolidWorks', 'SketchUp', 'Additive Manufacturing', 'User-Oriented Design'],
-    description: 'Designed, fabricated, and donated 200+ 3D printed faceshields for local hospital staff during Covid-19 shortages.',
-    technologies: ['CAD', 'Fabrication'],
-    imageUrl: './headband.jpg',
-    hoverImageUrl: './headband.jpg'
-  },
   {
     id: 'OutreachAI',
     title: 'Agentic AI Tools',
@@ -186,11 +128,32 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'adcs',
     title: 'Satellite Attitude Controller',
-    categories: ['Python', 'C', 'MatLab', 'Simulink', 'PID Control', 'SolidWorks', 'Addative Manufacturing', 'Hardware Design'],
-    description: 'Developed firmware and testbench hardware for a "1U" CubeSat reaction-wheel control system, implementing PID control logic for precise orientation stability. This includes Simulink and MatLab simulations and a 3D printed testbench with computational and electrical hardware required to run and test PID control systems in a single axis.',
+    categories: ['Python', 'C', 'MATLAB', 'Simulink', 'PID Control', 'SolidWorks', 'Additive Manufacturing', 'Hardware Design'],
+    description: 'Developed firmware and testbench hardware for a "1U" CubeSat reaction-wheel control system, implementing PID control logic for precise orientation stability. This includes Simulink and MATLAB simulations and a 3D printed testbench with computational and electrical hardware required to run and test PID control systems in a single axis.',
     technologies: ['Software', 'Control Systems', 'Hardware', 'Simulation', 'CAD'],
-    imageUrl: './attitudecontrol.jpg',
-    hoverImageUrl: './attitudecontrol.jpg'
+    imageUrl: './attitudecontrol.png',
+    hoverImageUrl: './attitudecontrol.png',
+    videoUrl: './adcs-testbench.mp4'
+  },
+  {
+    id: 'geophoto',
+    title: 'GeoPhoto Explorer',
+    categories: ['Web App', 'Gemini API', 'Adobe Lightroom API', 'Interactive Maps', 'Firebase Hosting'],
+    description: 'A web app that plots my geotagged travel photography on an interactive world map. Albums sync automatically from Adobe Lightroom, and each photo is paired with an AI-generated history fact about its location using Google Gemini. A screensaver mode flies between locations around the map.',
+    technologies: ['Software', 'AI'],
+    imageUrl: './travel-map.jpg',
+    hoverImageUrl: './travel-map.jpg',
+    videoUrl: './travel-map.mp4',
+    link: 'https://decisive-mapper-306615.web.app/'
+  },
+  {
+    id: 'eclipse',
+    title: 'Radio Telescope Thesis',
+    categories: ['Optical Design', 'MATLAB', 'Python', 'SolidWorks', 'Research'],
+    description: 'Designed optical geometry and sensor configuration for a low-cost radio telescope with the intention of capturing spatial eclipse data through cloud cover. Created simulation to understand effective dynamic range given different design choices and use-cases.',
+    technologies: ['Optics', 'CAD', 'Simulation'],
+    imageUrl: './radiotele.png',
+    hoverImageUrl: './radiotele.png'
   },
   {
     id: 'VIAVIapp',
@@ -200,5 +163,59 @@ export const PROJECTS: ProjectItem[] = [
     technologies: ['Software'],
     imageUrl: './VIAVIcats.jpg',
     hoverImageUrl: './VIAVIcats.jpg'
+  },
+  {
+    id: 'headband',
+    title: 'Volunteering - Face Shields',
+    categories: ['SolidWorks', 'SketchUp', 'Additive Manufacturing', 'User-Oriented Design'],
+    description: 'Designed, fabricated, and donated 200+ 3D printed face shields for local hospital staff during Covid-19 shortages.',
+    technologies: ['CAD', 'Fabrication'],
+    imageUrl: './headband.jpg',
+    hoverImageUrl: './headband.jpg'
+  },
+  {
+    id: 'espresso',
+    title: 'IoT Espresso Machine',
+    categories: ['IoT', 'Python-Flask', 'Data Analysis', 'Sensors', 'Networked Computing'],
+    description: 'Engineered a real-time sensor array integrated into an espresso machine. Developed a network interface in Python (Flask) to stream pressure telemetry for precise brew control.',
+    technologies: ['Software', 'IoT', 'Hardware'],
+    imageUrl: './profile.png',
+    hoverImageUrl: './profile.png'
+  },
+  {
+    id: 'climbing',
+    title: 'Adjustable Climbing Wall',
+    categories: ['SolidWorks', '3D-Printing', 'Additive Manufacturing'],
+    description: 'Designed and fabricated a 300 sq ft adjustable climbing wall. Utilized SolidWorks for structural modeling and 3D printing for custom holds manufacturing.',
+    technologies: ['Fabrication', 'CAD'],
+    imageUrl: './climbing wall.jpg',
+    hoverImageUrl: './climbing wall.jpg'
+  },
+  {
+    id: 'printer',
+    title: 'Networked 3D Printer Controller',
+    categories: ['Python', 'HTML', 'CSS', 'IoT', 'Networking', 'Additive Manufacturing'],
+    description: 'Deployed and customized an Octoprint-based server for remote 3D printer management. Integrated custom electronics and server logic to enhance print reliability.',
+    technologies: ['Software', 'Hardware', 'IoT'],
+    imageUrl: './3dprinter.jpg',
+    hoverImageUrl: './3dprinter.jpg'
+  },
+  {
+    id: 'mqttlights',
+    title: 'MQTT Synchronous Lights',
+    categories: ['ESP8266', 'IoT-HiveMQ', 'C', 'Sensors', 'Networked Computing'],
+    description: 'Used HiveMQ to create an example MQTT Pub/Sub system to synchronize 2 sets of lights using ESP8266 boards. Created my own RLC circuit functioning as capacitive sensors to control the lights.',
+    technologies: ['Hardware', 'IoT', 'Software'],
+    imageUrl: './ESP8266.jpg',
+    hoverImageUrl: './ESP8266.jpg'
+  },
+  {
+    id: 'camera',
+    title: 'Camera Repair',
+    categories: ['SolidWorks', 'Optics', 'Hardware-diagnosis', 'Reclamation', 'Additive Manufacturing'],
+    description: 'Reverse-engineered and repaired digital camera mechanisms. Designed 3D-printed adaptors to interface vintage film lenses with modern digital bodies.',
+    technologies: ['CAD', 'Optics', 'Hardware'],
+    imageUrl: './adaptor.jpg',
+    hoverImageUrl: './adaptor.jpg'
   }
 ];

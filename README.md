@@ -1,20 +1,31 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Calum Graham — Portfolio
 
-# Run and deploy your AI Studio app
+Personal portfolio site, live at **https://cal-graham.github.io/cal-graham/**.
 
-This contains everything you need to run your app locally.
+Built with React 19, TypeScript, Vite and Tailwind CSS v4.
 
-View your app in AI Studio: https://ai.studio/apps/drive/16FiViVgAQhBthds163dWD0oavv_nxQNe
+## Run locally
 
-## Run Locally
+Prerequisite: Node.js 20+
 
-**Prerequisites:**  Node.js
+```sh
+npm install
+npm run dev
+```
 
+Then open http://localhost:3000/cal-graham/.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Editing content
+
+Almost all site content lives in [`constants.ts`](constants.ts): the about text, experience, education, volunteering, skills and projects. Project images go in [`public/`](public/) and are referenced as `./filename.jpg`.
+
+## Deploying
+
+Pushing to `main` runs [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds the site and publishes `dist/` to the `gh-pages` branch.
+
+To check a production build locally:
+
+```sh
+npm run build
+npm run preview
+```

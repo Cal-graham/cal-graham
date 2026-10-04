@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Raw screen recordings (compressed copies are committed instead)
+public/Screen Recording*

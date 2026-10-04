@@ -1,11 +1,12 @@
 import React from 'react';
 import Section from './Section';
 import { SKILLS } from '../constants';
-import { Code2, Wrench, Languages } from 'lucide-react';
+import { Code2, Wrench, Languages, TrendingUp } from 'lucide-react';
 import FadeIn from './FadeIn';
 
 const iconMap = {
   "Programming & Tech": <Code2 size={24} />,
+  "Operations & Consulting": <TrendingUp size={24} />,
   "Engineering & Design": <Wrench size={24} />,
   "Languages": <Languages size={24} />
 };
@@ -14,7 +15,7 @@ const Skills: React.FC = () => {
   return (
     <Section id="skills" title="Skills" isDark>
       <FadeIn>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {SKILLS.map((skillGroup, index) => (
             <div 
               key={skillGroup.category} 

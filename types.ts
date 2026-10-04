@@ -25,6 +25,8 @@ export interface ProjectItem {
   technologies: string[];
   imageUrl: string;
   hoverImageUrl?: string;
+  videoUrl?: string;
+  link?: string;
 }
 
 export interface SkillCategory {

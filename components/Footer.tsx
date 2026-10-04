@@ -1,5 +1,5 @@
 import React from 'react';
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { Camera, Github, Linkedin, Mail } from 'lucide-react';
 import { SOCIAL_LINKS } from '../constants';
 
 const Footer: React.FC = () => {
@@ -12,9 +12,10 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="flex gap-6">
-           <a href={SOCIAL_LINKS.email} className="hover:text-white transition-colors"><Mail size={20} /></a>
-           <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><Linkedin size={20} /></a>
-           <a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><Github size={20} /></a>
+           <a href={`mailto:${SOCIAL_LINKS.email}`} aria-label="Email" className="hover:text-white transition-colors"><Mail size={20} /></a>
+           <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-white transition-colors"><Linkedin size={20} /></a>
+           <a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="hover:text-white transition-colors"><Github size={20} /></a>
+           <a href={SOCIAL_LINKS.photos} target="_blank" rel="noopener noreferrer" aria-label="Travel photos" title="Travel photos" className="hover:text-white transition-colors"><Camera size={20} /></a>
         </div>
 
         <div className="text-sm">

@@ -7,11 +7,10 @@ const FOCAL_LENGTH = 800;
 const ROTATION_SPEED = 0.001;
 const DRAG_SENSITIVITY = 0.005;
 
-const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, title: string) => {
-  const target = e.currentTarget;
-  target.onerror = null; 
-  target.src = `https://placehold.co/800x600/1e293b/0ea5e9?text=${encodeURIComponent(title)}`;
-};
+// Padding around the sphere so project nodes (96px) are not clipped at the edges
+const FIT_PADDING = 100;
+// Pointer travel (px) beyond which a press counts as a drag rather than a click
+const DRAG_THRESHOLD = 5;
 
 interface NodeCloudProps {
   interactive?: boolean;
@@ -21,15 +20,15 @@ interface NodeCloudProps {
   scale?: number;
 }
 
-const NodeCloud: React.FC<NodeCloudProps> = ({ 
-  interactive = true, 
-  onNodeClick, 
-  className = '', 
+const NodeCloud: React.FC<NodeCloudProps> = ({
+  interactive = true,
+  onNodeClick,
+  className = '',
   showLabels = true,
-  scale = 1 
+  scale = 1
 }) => {
   const [nodes, setNodes] = useState<GraphNode[]>([]);
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const nodesRef = useRef<GraphNode[]>([]);
@@ -37,19 +36,30 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
   const nodeElementsRef = useRef<Map<string, HTMLDivElement>>(new Map());
   const requestRef = useRef<number>(0);
   const hoveredNodeIdRef = useRef<string | null>(null);
-  
+
   // 3D State
   const rotationRef = useRef({ x: 0, y: 0 });
   const targetRotationRef = useRef({ x: 0, y: 0 });
   const isDraggingRef = useRef(false);
   const lastMouseRef = useRef({ x: 0, y: 0 });
+  const dragDistanceRef = useRef(0);
+  const isVisibleRef = useRef(true);
+  const reducedMotionRef = useRef(false);
+
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    reducedMotionRef.current = query.matches;
+    const onChange = (e: MediaQueryListEvent) => { reducedMotionRef.current = e.matches; };
+    query.addEventListener('change', onChange);
+    return () => query.removeEventListener('change', onChange);
+  }, []);
 
   // Initialize Data (Spherical Layout)
   useEffect(() => {
     const newNodes: GraphNode[] = [];
     const newLinks: GraphLink[] = [];
     const effectiveRadius = SPHERE_RADIUS * scale;
-    
+
     // Helper to get point on sphere
     const getSpherePoint = (i: number, total: number, radius: number, offset: number = 0) => {
         const phi = Math.acos(-1 + (2 * i) / total);
@@ -78,8 +88,8 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
     const uniqueSkills = Array.from(new Set(PROJECTS.flatMap(p => p.technologies)));
     uniqueSkills.forEach((skill, i) => {
       const skillId = `skill-${skill}`;
-      const pos = getSpherePoint(i, uniqueSkills.length, effectiveRadius * 0.6, 2); 
-      
+      const pos = getSpherePoint(i, uniqueSkills.length, effectiveRadius * 0.6, 2);
+
       newNodes.push({
         id: skillId,
         type: 'skill',
@@ -92,7 +102,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
       const connectedProjects = PROJECTS.filter(p => p.technologies.includes(skill));
       connectedProjects.forEach(p => {
         newLinks.push({ source: p.id, target: skillId });
-        
+
         const pNode = newNodes.find(n => n.id === p.id);
         const sNode = newNodes.find(n => n.id === skillId);
         if (pNode) pNode.relatedIds.push(skillId);
@@ -108,12 +118,16 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
   // Animation Loop
   const animate = useCallback(() => {
     if (!containerRef.current) return;
-    
+    requestRef.current = requestAnimationFrame(animate);
+
+    // Skip all work while scrolled out of view
+    if (!isVisibleRef.current) return;
+
     // Update Rotation
-    if (!isDraggingRef.current && !hoveredNodeIdRef.current) {
+    if (!isDraggingRef.current && !hoveredNodeIdRef.current && !reducedMotionRef.current) {
         targetRotationRef.current.y += ROTATION_SPEED;
     }
-    
+
     rotationRef.current.x += (targetRotationRef.current.x - rotationRef.current.x) * 0.1;
     rotationRef.current.y += (targetRotationRef.current.y - rotationRef.current.y) * 0.1;
 
@@ -123,6 +137,8 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
     const height = container.clientHeight;
     const cx = width / 2;
     const cy = height / 2;
+    // Shrink the sphere on small containers (e.g. phones) so it stays on screen
+    const fit = Math.min(1, Math.min(width, height) / (2 * (SPHERE_RADIUS * scale + FIT_PADDING)));
 
     if (canvasRef.current) {
         // Handle resizing without clearing too aggressively if possible, but standard is reset
@@ -135,7 +151,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
 
     const hoveredId = hoveredNodeIdRef.current;
     const highlightedIds = new Set<string>();
-    
+
     if (hoveredId && interactive) {
         highlightedIds.add(hoveredId);
         const hoveredNode = nodesRef.current.find(n => n.id === hoveredId);
@@ -155,18 +171,18 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
         let y = node.y * cosX - z * sinX;
         z = z * cosX + node.y * sinX;
 
-        const scale = FOCAL_LENGTH / (FOCAL_LENGTH - z);
-        const px = x * scale + cx;
-        const py = y * scale + cy;
+        const depthScale = FOCAL_LENGTH / (FOCAL_LENGTH - z);
+        const px = x * depthScale * fit + cx;
+        const py = y * depthScale * fit + cy;
 
-        return { ...node, px, py, scale, zIndex: Math.floor(scale * 100) };
+        return { ...node, px, py, scale: depthScale, zIndex: Math.floor(depthScale * 100) };
     });
 
     if (ctx) {
         linksRef.current.forEach(link => {
             const source = projectedNodes.find(n => n.id === link.source);
             const target = projectedNodes.find(n => n.id === link.target);
-            
+
             if (source && target) {
                 const isConnected = hoveredId && (link.source === hoveredId || link.target === hoveredId);
                 const isHoverMode = !!hoveredId && interactive;
@@ -203,7 +219,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
         const isHighlighted = highlightedIds.has(node.id);
 
         if (el) {
-            let scale = node.scale;
+            let scale = node.scale * Math.max(fit, 0.65);
             let opacity = Math.max(0.3, node.scale - 0.2);
             let zIndex = node.zIndex;
             let filter = 'none';
@@ -224,50 +240,66 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
             el.style.zIndex = zIndex.toString();
             el.style.opacity = opacity.toString();
             el.style.filter = filter;
-            
+
             if (showLabels) {
-                el.style.marginLeft = node.type === 'project' ? '-48px' : '-40px'; 
+                el.style.marginLeft = node.type === 'project' ? '-48px' : '-40px';
                 el.style.marginTop = node.type === 'project' ? '-48px' : '-10px';
             } else {
-                el.style.marginLeft = '-6px'; 
+                el.style.marginLeft = '-6px';
                 el.style.marginTop = '-6px';
             }
         }
     });
-
-    requestRef.current = requestAnimationFrame(animate);
-  }, [interactive, showLabels]);
+  }, [interactive, showLabels, scale]);
 
   useEffect(() => {
     requestRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(requestRef.current);
   }, [animate]);
 
-  // Interaction Handlers
-  const handleMouseDown = (e: React.MouseEvent) => {
+  // Pause the animation loop while the cloud is off screen
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisibleRef.current = entry.isIntersecting;
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Interaction Handlers (pointer events cover mouse, touch and pen)
+  const handlePointerDown = (e: React.PointerEvent) => {
     if (!interactive) return;
     isDraggingRef.current = true;
+    dragDistanceRef.current = 0;
     lastMouseRef.current = { x: e.clientX, y: e.clientY };
     targetRotationRef.current = { ...rotationRef.current };
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handlePointerMove = (e: React.PointerEvent) => {
     if (!interactive || !isDraggingRef.current) return;
     const dx = e.clientX - lastMouseRef.current.x;
     const dy = e.clientY - lastMouseRef.current.y;
-    
+    dragDistanceRef.current += Math.abs(dx) + Math.abs(dy);
+
     targetRotationRef.current.y += dx * DRAG_SENSITIVITY;
-    targetRotationRef.current.x += dy * DRAG_SENSITIVITY;
-    
+    // Touch drags only rotate horizontally so vertical swipes still scroll the page
+    if (e.pointerType === 'mouse') {
+      targetRotationRef.current.x += dy * DRAG_SENSITIVITY;
+    }
+
     lastMouseRef.current = { x: e.clientX, y: e.clientY };
   };
 
-  const handleMouseUp = () => {
+  const handlePointerUp = () => {
     isDraggingRef.current = false;
   };
 
   const handleNodeClickInternal = (nodeId: string) => {
       if (!interactive || !onNodeClick) return;
+      // Ignore the click that ends a rotate-drag
+      if (dragDistanceRef.current > DRAG_THRESHOLD) return;
       const node = nodesRef.current.find(n => n.id === nodeId);
       if (node) {
           onNodeClick(node.id, node.type);
@@ -275,31 +307,47 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
   };
 
   return (
-    <div 
-        ref={containerRef} 
-        className={`relative w-full h-full overflow-hidden ${interactive ? 'cursor-grab active:cursor-grabbing' : ''} ${className}`}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
+    <div
+        ref={containerRef}
+        className={`relative w-full h-full overflow-hidden ${interactive ? 'cursor-grab active:cursor-grabbing touch-pan-y select-none' : ''} ${className}`}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+        aria-hidden={interactive ? undefined : true}
     >
-        <canvas 
-            ref={canvasRef} 
-            className="absolute inset-0 w-full h-full pointer-events-none" 
+        <canvas
+            ref={canvasRef}
+            className="absolute inset-0 w-full h-full pointer-events-none"
         />
-        
+
         {nodes.map(node => (
             <div
             key={node.id}
             ref={el => { if (el) nodeElementsRef.current.set(node.id, el); }}
+            {...(interactive ? {
+                role: 'button',
+                tabIndex: 0,
+                'aria-label': node.type === 'project' ? `Project: ${node.text}` : `Projects using ${node.text}`,
+            } : {})}
             onClick={(e) => {
                 e.stopPropagation();
                 handleNodeClickInternal(node.id);
             }}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    dragDistanceRef.current = 0;
+                    handleNodeClickInternal(node.id);
+                }
+            }}
             onMouseEnter={() => { if (interactive) hoveredNodeIdRef.current = node.id; }}
             onMouseLeave={() => { if (interactive) hoveredNodeIdRef.current = null; }}
-            className={`absolute top-0 left-0 will-change-transform flex items-center justify-center transition-colors duration-200
-                ${showLabels ? (node.type === 'project' ? 'w-24 h-24' : 'w-auto h-auto') : 'w-3 h-3'} 
+            onFocus={() => { if (interactive) hoveredNodeIdRef.current = node.id; }}
+            onBlur={() => { if (interactive) hoveredNodeIdRef.current = null; }}
+            className={`absolute top-0 left-0 will-change-transform flex items-center justify-center transition-colors duration-200 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400
+                ${showLabels ? (node.type === 'project' ? 'w-24 h-24' : 'w-auto h-auto') : 'w-3 h-3'}
                 ${interactive ? 'cursor-pointer' : ''}`}
             >
             {showLabels ? (

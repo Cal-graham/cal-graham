@@ -10,9 +10,7 @@ export const SOCIAL_LINKS = {
 
 export const ABOUT_TEXT = `I am an early-career professional who's passionate about new technologies, sustainable outcomes, and operational improvement. Leveraging my Engineering Physics background, I work as an Operations Consultant - bridging the gap between complex industrial processes and bottom line operations impact.
 
-Currently based in Toronto, with experience across the EU and North America, my work has been to find hidden inefficiencies and turn them into multi-million dollar improvements.
-
-In addition to technical industrial processes, I get to exercise my interest in new technologies internally - managing IT for my organization and developing AI-enabled software tools for internal business and clients.
+Currently based in Toronto, with experience across the EU and North America, my work has been to find hidden inefficiencies and turn them into multi-million dollar improvements. In addition to technical industrial processes, I get to exercise my interest in new technologies internally - managing IT for my organization and developing AI-enabled software tools for internal business and clients.
 
 When I’m not running operational improvement projects you’ll find me rock climbing, hobbying with new tech, or travelling and taking photos.`;
 

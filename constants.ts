@@ -124,8 +124,9 @@ export const PROJECTS: ProjectItem[] = [
     categories: ['Agentic AI', 'RAG', 'Python', 'Google Cloud Platform', 'Tavily API'],
     description: 'Built AI research tools that automated one of the largest time-sinks in our business development pipeline. An agentic pipeline on Google Cloud Platform uses web research tools such as the Tavily API for network mapping and lead selection, and a RAG interface helps generate outreach, replacing discovery work that was previously done by hand.',
     technologies: ['Software'],
-    imageUrl: './OutreachAI.jpg',
-    hoverImageUrl: './OutreachAI.jpg'
+    imageUrl: './outreach-app.jpg',
+    hoverImageUrl: './outreach-app.jpg',
+    videoUrl: './outreach-app.mp4'
   },
   {
     id: 'patchcore',
@@ -190,8 +191,8 @@ export const PROJECTS: ProjectItem[] = [
     categories: ['IoT', 'Raspberry Pi', 'ESP8266', 'Python', 'Flask', 'Sensors', 'Data Analysis'],
     description: 'Built a real-time sensor system into an espresso machine: a Raspberry Pi reads boiler pressure, group-head and boiler temperature, and group-head flow through two ADS1115 ADCs, with acquisition and smoothing on separate threads. A Python (Flask) web app plots the live data against brew profiles, such as a light-roast pressure ramp, for precise brew control. A later version moved the sensors onto ESP8266 boards that stream readings to the Pi.',
     technologies: ['Software', 'IoT', 'Hardware'],
-    imageUrl: './profile.png',
-    hoverImageUrl: './profile.png'
+    imageUrl: './beans.1.png',
+    hoverImageUrl: './beans.1.png'
   },
   {
     id: 'climbing',

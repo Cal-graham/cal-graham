@@ -17,21 +17,28 @@ When I’m not running operational improvement projects you’ll find me rock cl
 export const EXPERIENCES: ExperienceItem[] = [
   {
     id: 'stroud',
-    role: 'Operations Consultant',
+    role: 'Consultant',
     company: 'Stroud International',
-    location: 'Canada, US, UK, Germany',
+    location: 'North America & Europe',
     period: '2023 - Present',
     description: [
       {
-        text: 'Lead on-site client teams to solve complex operational challenges, delivering measurable ROI.',
+        text: 'Owned on-site delivery of projects across North America and Europe, leading client teams and direct reports to deliver solutions to high-value challenges such as:',
         subItems: [
-          'Doubled value of client’s improvement portfolio, securing ~€5M in waste reductions and ~300 tonnes of CO2e savings.',
-          'Identified and mapped ~$8.2M of raw material waste opportunities within a commercial food packaging facility.',
-          'Diagnosed root cause of a decades-old process failure at a regulated medical manufacturing site, resolving a ~10% waste driver.'
+          'Restructured a client’s improvement portfolio to more than double its original value, including €5M in waste reductions that correspond to 300 tonnes of CO₂e.',
+          'Built a roadmap to scale operations with 2.5x organic revenue growth over 5 years, addressing operational challenges and saving $1.8M/yr in improved efficiencies.',
+          'Identified $8.2M of raw material waste within a commercial food packer.',
+          'Pinpointed a previously unknown phenomenon in a decades-old process causing 10% of waste at a highly regulated medical manufacturing site.'
         ]
       },
-      'Serve as Global Head of IT, leading cybersecurity initiatives, cloud service optimization, and AI tool implementation.',
-      'Founded the Carbon Accounting team to integrate climate-oriented metrics into operational improvement strategies.'
+      {
+        text: 'As Global Tech Lead, enacted improvements to accounting, cybersecurity and cloud services, designed and maintained financial dashboards, and developed custom software tools, such as:',
+        subItems: [
+          'Created a cloud training pipeline (PatchCore) for anomaly detection in industrial settings, enabling improvement teams to target low-frequency downtime events.',
+          'Deployed AI-based research tools (an agentic pipeline and a RAG interface) to support business development through network mapping, lead selection and outreach generation.'
+        ]
+      },
+      'Proposed and carried out a Carbon Accounting scope, using the GHG Protocol to understand client impact.'
     ]
   },
   {
@@ -40,20 +47,17 @@ export const EXPERIENCES: ExperienceItem[] = [
     company: 'VIAVI Solutions',
     period: '2021 - 2022',
     description: [
-      'Managed key stakeholder relationships to maintain and expand a critical $10M project.',
-      'Developed a cloud-based sample-tracking tool used by 10-20 R&D engineers, reclaiming ~5% of internal R&D engineering time.',
-      'Executed rigorous testing of next-gen optical technologies to inform product development roadmaps.'
+      'Designed and carried out test programs, turning experimental results into client outcomes.',
+      'Developed an internal logistics app (Python/Django/Flask) used by 10-20 R&D engineers, saving ~5% of internal R&D engineering time.'
     ]
   },
   {
     id: 'queens-work',
-    role: 'Work Study Program',
+    role: 'Faculty Support',
     company: "Queen's University",
     period: '2018 - 2023',
     description: [
-      'Managed operations for a student-run Carbon Neutral Cafe.',
-      'Contributed to Engineering course curriculum development.',
-      'Provided technical assistance for Civil Engineering laboratories.'
+      'Multiple positions: Carbon Neutral Café, Engineering Course Development and Laboratory Technician.'
     ]
   }
 ];
@@ -77,7 +81,7 @@ export const VOLUNTEERING: VolunteerItem[] = [
     id: 'qset',
     role: 'Attitude Determination Control (ADCS) Manager',
     organization: "Queen's Space Engineering Team (QSET)",
-    period: '2018 - 2021',
+    period: '2018 - 2023',
     details: [
       'Led a team of 5 engineers in the end-to-end development and launch of an ADCS payload on a CSA stratospheric balloon.',
       'Defined technical roadmap aligning with Canadian Satellite Design Challenge milestones.'
@@ -97,11 +101,11 @@ export const VOLUNTEERING: VolunteerItem[] = [
 export const SKILLS: SkillCategory[] = [
   {
     category: "Programming & Tech",
-    items: ["Python", "Flask", "Agentic AI & LLM Tooling", "Google Cloud (GCP)", "MATLAB/Simulink", "C / Embedded C", "JavaScript", "Git", "IoT", "MQTT", "ESP8266"]
+    items: ["Python", "Flask", "Agentic AI & LLM Tooling", "Claude Code", "Computer Vision (PatchCore)", "Google Cloud (GCP)", "MATLAB/Simulink", "C / Embedded C", "JavaScript", "Git", "IoT", "MQTT", "ESP8266"]
   },
   {
     category: "Operations & Consulting",
-    items: ["Lean / Six Sigma", "Process Mapping", "Carbon Accounting", "Data Analysis"]
+    items: ["Lean / Six Sigma", "Process Mapping", "Carbon Accounting", "Data Analysis", "Power BI", "Microsoft 365", "Google Workspace"]
   },
   {
     category: "Engineering & Design",
@@ -109,7 +113,7 @@ export const SKILLS: SkillCategory[] = [
   },
   {
     category: "Languages",
-    items: ["English (Fluent)", "French (Intermediate)", "German (Intermediate)", "Mandarin Chinese (Intermediate)"]
+    items: ["English (Native)", "French (Intermediate)", "German (Intermediate)", "Mandarin Chinese (Intermediate)"]
   }
 ];
 
@@ -117,17 +121,26 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'OutreachAI',
     title: 'Agentic AI Tools',
-    categories: ['Agentic AI', 'Python', 'REST APIs', 'Google Cloud Platform', 'Tavily API'],
-    description: 'Built an internal agentic AI tool that automated one of the largest time-sinks in our business development pipeline: researching prospective clients and mapping our network to them. The agent runs on Google Cloud Platform and uses web research tools such as the Tavily API to do the discovery work that was previously done by hand.',
+    categories: ['Agentic AI', 'RAG', 'Python', 'Google Cloud Platform', 'Tavily API'],
+    description: 'Built AI research tools that automated one of the largest time-sinks in our business development pipeline. An agentic pipeline on Google Cloud Platform uses web research tools such as the Tavily API for network mapping and lead selection, and a RAG interface helps generate outreach, replacing discovery work that was previously done by hand.',
     technologies: ['Software'],
     imageUrl: './OutreachAI.jpg',
     hoverImageUrl: './OutreachAI.jpg'
   },
   {
+    id: 'patchcore',
+    title: 'Downtime Detection (PatchCore)',
+    categories: ['Computer Vision', 'Anomaly Detection', 'PatchCore', 'Python', 'Cloud ML Pipelines'],
+    description: 'Built an unsupervised cloud training pipeline for a PatchCore anomaly-detection model that recognizes, highlights and categorizes downtime events on manufacturing lines. Because it needs no labelled data, improvement teams can target rare, low-frequency downtime events that are hard to catch by hand.',
+    technologies: ['Software', 'AI'],
+    imageUrl: './patchcore.png',
+    hoverImageUrl: './patchcore.png'
+  },
+  {
     id: 'adcs',
     title: 'Satellite Attitude Controller',
     categories: ['Python', 'C', 'MATLAB', 'Simulink', 'PID Control', 'SolidWorks', 'Additive Manufacturing', 'Hardware Design'],
-    description: 'Three years on Queen\'s Space Engineering Team (QSET): first as a team member, then leading the five-engineer Attitude Determination and Control (ADCS) subteam, and finally as technical advisor. As lead, my subteam designed and built an ADCS payload that flew on a stratospheric balloon later that year. The work included firmware and a 3D-printed single-axis testbench for a 1U CubeSat reaction wheel, with PID control validated in MATLAB/Simulink simulations.',
+    description: 'Five years on Queen\'s Space Engineering Team (QSET): first as a team member, then leading the five-engineer Attitude Determination and Control (ADCS) subteam, and finally as technical advisor. As lead, my subteam designed and built an ADCS payload that flew on a stratospheric balloon later that year. The work included firmware and a 3D-printed single-axis testbench for a 1U CubeSat reaction wheel, with PID control validated in MATLAB/Simulink simulations.',
     technologies: ['Software', 'Control Systems', 'Hardware', 'Simulation', 'CAD'],
     imageUrl: './attitudecontrol.png',
     hoverImageUrl: './attitudecontrol.png',
@@ -137,7 +150,7 @@ export const PROJECTS: ProjectItem[] = [
     id: 'geophoto',
     title: 'GeoPhoto Explorer',
     categories: ['React', 'Leaflet', 'Gemini API', 'Adobe Lightroom API', 'Firebase'],
-    description: 'A web app that maps my travel photography. It reads GPS coordinates from each photo\'s EXIF data, syncs albums from Adobe Lightroom (OAuth with PKCE) and plots them on a Leaflet world map. Google Gemini, called through Firebase AI Logic with Google Search grounding, writes a short history fact for each location and falls back across models when free-tier quotas run out. It is hosted on Firebase with App Check and owner-only database writes, and an offline kiosk build pre-downloads map tiles so it can run as a screensaver.',
+    description: 'A web app that maps my travel photography. It reads GPS coordinates from each photo\'s EXIF data, syncs albums from Adobe Lightroom (OAuth with PKCE) and plots them on a Leaflet world map. Google Gemini, called through Firebase AI Logic, writes a short history fact for each location using Google Search data based on location and photo content tags.',
     technologies: ['Software', 'AI'],
     imageUrl: './travel-map.jpg',
     hoverImageUrl: './travel-map.jpg',
@@ -174,8 +187,8 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'espresso',
     title: 'IoT Espresso Machine',
-    categories: ['IoT', 'Raspberry Pi', 'Python', 'Flask', 'Sensors', 'Data Analysis'],
-    description: 'Built a real-time sensor system into an espresso machine: a Raspberry Pi reads boiler pressure, group-head and boiler temperature, and group-head flow through two ADS1115 ADCs, with acquisition and smoothing on separate threads. A Python (Flask) web app plots the live data against brew profiles, such as a light-roast pressure ramp, for precise brew control.',
+    categories: ['IoT', 'Raspberry Pi', 'ESP8266', 'Python', 'Flask', 'Sensors', 'Data Analysis'],
+    description: 'Built a real-time sensor system into an espresso machine: a Raspberry Pi reads boiler pressure, group-head and boiler temperature, and group-head flow through two ADS1115 ADCs, with acquisition and smoothing on separate threads. A Python (Flask) web app plots the live data against brew profiles, such as a light-roast pressure ramp, for precise brew control. A later version moved the sensors onto ESP8266 boards that stream readings to the Pi.',
     technologies: ['Software', 'IoT', 'Hardware'],
     imageUrl: './profile.png',
     hoverImageUrl: './profile.png'

@@ -155,12 +155,15 @@ const Projects: React.FC = () => {
 
       <FadeIn className="w-full">
         {viewMode === '3d' ? (
-          <div className="w-full h-[95vh] bg-slate-900 relative overflow-hidden shadow-inner">
+          <div className="w-full min-h-[95vh] bg-slate-900 relative overflow-clip shadow-inner">
              {/* Dark background grid effect */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none" />
+            {/* The sphere stage stays 95vh; the section grows when a details panel opens */}
             <NodeCloud
               interactive={true}
               scale={NODE_CLOUD_SCALE}
+              className="min-h-[95vh]"
+              stageClassName="h-[95vh]"
             />
           </div>
         ) : (

@@ -27,20 +27,25 @@ interface Flight { from: NodeVisual; start: number; }
 
 interface NodeCloudProps {
   interactive?: boolean;
+  // Sizes the outer box, which grows to fit the focus panel
   className?: string;
+  // Sizes the area the sphere is drawn in; stays fixed while the panel is open
+  stageClassName?: string;
   showLabels?: boolean;
   scale?: number;
 }
 
 const NodeCloud: React.FC<NodeCloudProps> = ({
   interactive = true,
-  className = '',
+  className = 'h-full',
+  stageClassName = 'h-full',
   showLabels = true,
   scale = 1
 }) => {
   const [nodes, setNodes] = useState<GraphNode[]>([]);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const nodesRef = useRef<GraphNode[]>([]);
   const linksRef = useRef<GraphLink[]>([]);
@@ -67,6 +72,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
   const backgroundBlurRef = useRef({ from: 0, to: 0, start: 0 });
   const closeTimerRef = useRef<number>(0);
   const lastFocusedRef = useRef<string | null>(null);
+  const returnToSphereRef = useRef(false);
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -195,6 +201,12 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
   const closeFocus = useCallback((viaKeyboard: boolean = false) => {
     if (!viaKeyboard) lastFocusedRef.current = null;
     changeFocus(null);
+    // If the visitor scrolled down a long panel, bring the sphere back into view to watch the bubbles return
+    const top = containerRef.current?.getBoundingClientRect().top ?? 0;
+    if (top < 0) {
+      returnToSphereRef.current = true;
+      containerRef.current?.scrollIntoView({ behavior: reducedMotionRef.current ? 'auto' : 'smooth', block: 'start' });
+    }
     setPanelClosing(true);
     closeTimerRef.current = window.setTimeout(() => {
       setFocusedId(null);
@@ -203,6 +215,17 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
   }, [changeFocus]);
 
   // Once the panel is gone (and the nodes are no longer inert), return keyboard focus to the node that was opened
+  // The section shrinks once the panel unmounts, which can cut a smooth scroll short; finish it if so
+  useEffect(() => {
+    if (focusedId || !returnToSphereRef.current) return;
+    returnToSphereRef.current = false;
+    const top = containerRef.current?.getBoundingClientRect().top ?? 0;
+    if (top < 0 || top > window.innerHeight / 2) {
+      // 'instant', not 'auto': the page's CSS scroll-behavior would turn 'auto' back into a smooth scroll
+      containerRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
+    }
+  }, [focusedId]);
+
   useEffect(() => {
     if (focusedId || !lastFocusedRef.current) return;
     nodeElementsRef.current.get(lastFocusedRef.current)?.focus({ preventScroll: true });
@@ -246,9 +269,10 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
 
     const ctx = canvasRef.current?.getContext('2d');
     const container = containerRef.current;
+    const stage = stageRef.current ?? container;
     const containerRect = container.getBoundingClientRect();
-    const width = container.clientWidth;
-    const height = container.clientHeight;
+    const width = stage.clientWidth;
+    const height = stage.clientHeight;
     const cx = width / 2;
     const cy = height / 2;
     // Shrink the sphere on small containers (e.g. phones) so it stays on screen
@@ -466,7 +490,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
   return (
     <div
         ref={containerRef}
-        className={`relative w-full h-full overflow-hidden scroll-mt-24 ${interactive && !focusedId ? 'cursor-grab active:cursor-grabbing touch-pan-y select-none' : ''} ${className}`}
+        className={`relative w-full overflow-clip scroll-mt-24 ${interactive && !focusedId ? 'cursor-grab active:cursor-grabbing touch-pan-y select-none' : ''} ${className}`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -474,6 +498,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
         onPointerLeave={handlePointerUp}
         aria-hidden={interactive ? undefined : true}
     >
+        <div ref={stageRef} className={`absolute inset-x-0 top-0 ${stageClassName}`}>
         <canvas
             ref={canvasRef}
             className="absolute inset-0 w-full h-full pointer-events-none"
@@ -526,6 +551,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
             )}
             </div>
         ))}
+        </div>
         </div>
 
         {focusedNode && (

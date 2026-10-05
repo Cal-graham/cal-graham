@@ -41,13 +41,11 @@ const Slot: React.FC<{ node: GraphNode; registerSlot: FocusPanelProps['registerS
 );
 
 const FocusPanel: React.FC<FocusPanelProps> = ({ focused, related, closing, registerSlot, onSelect, onClose }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const project = projectFor(focused);
 
-  // New selection: start at the top and move keyboard focus into the panel
+  // New selection: move keyboard focus into the panel
   useEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollTop = 0;
     closeRef.current?.focus({ preventScroll: true });
   }, [focused.id]);
 
@@ -56,15 +54,29 @@ const FocusPanel: React.FC<FocusPanelProps> = ({ focused, related, closing, regi
   };
 
   return (
-    <>
-      <div
-        ref={scrollRef}
-        role="region"
-        aria-label={`${focused.type === 'project' ? 'Project' : 'Skill'}: ${focused.text}`}
-        className={`absolute inset-0 z-[2000] overflow-y-auto bg-slate-950/55 ${closing ? 'focus-fade-out pointer-events-none' : 'focus-fade-in'}`}
-        onClick={closeOnBackground}
-        data-close-area
-      >
+    // Sits in the page flow and grows the section to fit, so the page is the only scroll bar.
+    // min-height matches the sphere stage set in Projects.tsx so the tint always covers it.
+    <div
+      role="region"
+      aria-label={`${focused.type === 'project' ? 'Project' : 'Skill'}: ${focused.text}`}
+      className={`relative z-[2000] min-h-[95vh] bg-slate-950/55 ${closing ? 'focus-fade-out pointer-events-none' : 'focus-fade-in'}`}
+      onClick={closeOnBackground}
+      data-close-area
+    >
+      {/* Zero-height sticky row keeps the close button below the navbar while scrolling the panel */}
+      <div className="sticky top-24 z-[3100] h-0 flex justify-end pointer-events-none">
+        <button
+          ref={closeRef}
+          type="button"
+          // detail is 0 when the button is activated from the keyboard
+          onClick={(e) => onClose(e.detail === 0)}
+          aria-label="Close details"
+          className="pointer-events-auto mt-4 mr-4 p-2.5 rounded-full bg-slate-800/90 border border-slate-600 text-slate-300 hover:text-white hover:border-cyan-400 transition-colors"
+        >
+          <X size={20} />
+        </button>
+      </div>
+
         <div key={focused.id} className="max-w-5xl px-5 py-8 md:px-12 md:py-12" data-close-area>
           {/* Selected entity */}
           <div className="grid grid-cols-[6rem_1fr] md:grid-cols-[6rem_1fr_20rem] gap-x-6 gap-y-4 items-start" data-close-area>
@@ -186,19 +198,7 @@ const FocusPanel: React.FC<FocusPanelProps> = ({ focused, related, closing, regi
             </div>
           )}
         </div>
-      </div>
-
-      <button
-        ref={closeRef}
-        type="button"
-        // detail is 0 when the button is activated from the keyboard
-        onClick={(e) => onClose(e.detail === 0)}
-        aria-label="Close details"
-        className={`absolute top-4 right-4 z-[3100] p-2.5 rounded-full bg-slate-800/90 border border-slate-600 text-slate-300 hover:text-white hover:border-cyan-400 transition-colors ${closing ? 'focus-fade-out pointer-events-none' : 'focus-fade-in'}`}
-      >
-        <X size={20} />
-      </button>
-    </>
+    </div>
   );
 };
 

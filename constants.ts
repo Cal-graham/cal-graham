@@ -138,6 +138,15 @@ export const PROJECTS: ProjectItem[] = [
     hoverImageUrl: './patchcore.png'
   },
   {
+    id: 'travel',
+    title: 'Travel & Expense Automation',
+    categories: ['Gemini API', 'OCR', 'Gmail & Calendar APIs', 'Cloud Run & Pub/Sub', 'Firestore', 'Zoho Expense API', 'Slack Bot'],
+    description: 'A two-part system that takes the admin out of business travel. The first service watches each user\'s Gmail through Pub/Sub and uses Gemini with structured schemas to extract flight, hotel, train and car-rental confirmations. It matches updates to existing trips by vendor and confirmation code, so changes and cancellations flow straight through to their Google Calendar, and a Slack bot answers travel questions and sends weekly digests. Chargeable bookings are handed to the second app, which files them in Zoho Expense and uses Gemini Vision OCR to match scanned bank-statement transactions to each expense, recording the amount actually charged with the receipt attached.',
+    technologies: ['Software', 'AI'],
+    imageUrl: './transactions.png',
+    hoverImageUrl: './transactions.png'
+  },
+  {
     id: 'adcs',
     title: 'Satellite Attitude Controller',
     categories: ['Python', 'C', 'MATLAB', 'Simulink', 'PID Control', 'SolidWorks', 'Additive Manufacturing', 'Hardware Design'],

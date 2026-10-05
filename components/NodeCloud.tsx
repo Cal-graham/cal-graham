@@ -19,11 +19,67 @@ const FLIGHT_STAGGER_MS = 60;
 const PANEL_EXIT_MS = 250;
 const MAX_BACKGROUND_BLUR_PX = 6;
 
+// Radial layout: projects on an outer ring, skills on an inner ring
+const RADIAL_PADDING = 90;
+const RADIAL_PADDING_NARROW = 50; // phones: use more of the width
+const RADIAL_MAX_ASPECT = 1.35; // how far the rings may stretch into an ellipse, either way
+const RADIAL_INNER_RADII = [0.5, 0.64]; // skills alternate between two radii so labels don't collide
+const LAYOUT_MORPH_MS = 900;
+const LAYOUT_MORPH_STAGGER_MS = 12;
+
+export type GraphLayout = 'sphere' | 'radial';
+
+interface RadialSlot { angle: number; radius: number; }
+
+// Order the rings so links cross as little as possible: neighbouring projects share skills,
+// and each skill sits near the projects that use it.
+const computeRadialLayout = (nodes: GraphNode[]): Map<string, RadialSlot> => {
+  const slots = new Map<string, RadialSlot>();
+  const projects = nodes.filter(n => n.type === 'project');
+  const skills = nodes.filter(n => n.type === 'skill');
+  if (projects.length === 0) return slots;
+
+  const similarity = (a: GraphNode, b: GraphNode) => {
+    const shared = a.relatedIds.filter(id => b.relatedIds.includes(id)).length;
+    const union = new Set([...a.relatedIds, ...b.relatedIds]).size;
+    return union ? shared / union : 0;
+  };
+  const ordered = [projects[0]];
+  const remaining = projects.slice(1);
+  while (remaining.length) {
+    const last = ordered[ordered.length - 1];
+    let best = 0;
+    remaining.forEach((p, i) => { if (similarity(last, p) > similarity(last, remaining[best])) best = i; });
+    ordered.push(remaining.splice(best, 1)[0]);
+  }
+
+  const start = -Math.PI / 2;
+  ordered.forEach((p, i) => slots.set(p.id, { angle: start + (i * 2 * Math.PI) / ordered.length, radius: 1 }));
+
+  const meanAngle = (skill: GraphNode) => {
+    let sx = 0, sy = 0;
+    skill.relatedIds.forEach(id => {
+      const slot = slots.get(id);
+      if (slot) { sx += Math.cos(slot.angle); sy += Math.sin(slot.angle); }
+    });
+    return Math.atan2(sy, sx);
+  };
+  const bySide = skills.map(sk => ({ sk, mean: meanAngle(sk) })).sort((a, b) => a.mean - b.mean);
+  const first = bySide.length ? bySide[0].mean : 0;
+  bySide.forEach(({ sk }, i) => {
+    slots.set(sk.id, {
+      angle: first + (i * 2 * Math.PI) / bySide.length,
+      radius: RADIAL_INNER_RADII[i % RADIAL_INNER_RADII.length],
+    });
+  });
+  return slots;
+};
+
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
 
 interface NodeVisual { x: number; y: number; s: number; o: number; }
-interface Flight { from: NodeVisual; start: number; }
+interface Flight { from: NodeVisual; start: number; duration?: number; }
 
 interface NodeCloudProps {
   interactive?: boolean;
@@ -33,6 +89,8 @@ interface NodeCloudProps {
   stageClassName?: string;
   showLabels?: boolean;
   scale?: number;
+  // 'sphere' is the rotating 3D web; 'radial' is a flat two-ring connection graph
+  layout?: GraphLayout;
 }
 
 const NodeCloud: React.FC<NodeCloudProps> = ({
@@ -40,7 +98,8 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
   className = 'h-full',
   stageClassName = 'h-full',
   showLabels = true,
-  scale = 1
+  scale = 1,
+  layout = 'sphere'
 }) => {
   const [nodes, setNodes] = useState<GraphNode[]>([]);
 
@@ -72,6 +131,8 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
   const backgroundBlurRef = useRef({ from: 0, to: 0, start: 0 });
   const closeTimerRef = useRef<number>(0);
   const lastFocusedRef = useRef<string | null>(null);
+  const layoutRef = useRef<GraphLayout>(layout);
+  const radialSlotsRef = useRef<Map<string, RadialSlot>>(new Map());
   const returnToSphereRef = useRef(false);
 
   useEffect(() => {
@@ -146,9 +207,24 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
     });
 
     nodesRef.current = newNodes;
+    radialSlotsRef.current = computeRadialLayout(newNodes);
     linksRef.current = newLinks;
     setNodes(newNodes);
   }, [scale]);
+
+  // Switching layout morphs every bubble (except any parked in the focus panel) to its new home
+  useEffect(() => {
+    if (layoutRef.current === layout) return;
+    layoutRef.current = layout;
+    const now = performance.now();
+    nodesRef.current.forEach((n, i) => {
+      if (focusSetRef.current.has(n.id)) return;
+      const current = displayRef.current.get(n.id);
+      if (current) flightsRef.current.set(n.id, { from: { ...current }, start: now + i * LAYOUT_MORPH_STAGGER_MS, duration: LAYOUT_MORPH_MS });
+    });
+    hoveredNodeIdRef.current = null;
+    isDraggingRef.current = false;
+  }, [layout]);
 
   // --- Focus mode ---
 
@@ -259,8 +335,10 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
     const now = performance.now();
     const isFocused = focusSetRef.current.size > 0;
 
-    // Update Rotation (held still while a node is focused)
-    if (!isDraggingRef.current && !hoveredNodeIdRef.current && !reducedMotionRef.current && !isFocused) {
+    const isRadial = layoutRef.current === 'radial';
+
+    // Update Rotation (held still while a node is focused, and in the flat radial layout)
+    if (!isDraggingRef.current && !hoveredNodeIdRef.current && !reducedMotionRef.current && !isFocused && !isRadial) {
         targetRotationRef.current.y += ROTATION_SPEED;
     }
 
@@ -310,7 +388,26 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
     const sinY = Math.sin(rotationRef.current.y);
     const cosY = Math.cos(rotationRef.current.y);
 
+    // Radial rings stretch into a gentle ellipse to use the space, but never far from a circle
+    const ringPadding = width < 640 ? RADIAL_PADDING_NARROW : RADIAL_PADDING;
+    const roomX = Math.max(0, width / 2 - ringPadding);
+    const roomY = Math.max(0, height / 2 - ringPadding);
+    const ringX = Math.min(roomX, roomY * RADIAL_MAX_ASPECT);
+    const ringY = Math.min(roomY, roomX * RADIAL_MAX_ASPECT);
+    const radialFit = Math.min(1, Math.max(0.6, Math.min(ringX, ringY) / 300));
+
     const projectedNodes = nodesRef.current.map(node => {
+        if (isRadial) {
+            const slot = radialSlotsRef.current.get(node.id) ?? { angle: 0, radius: 0 };
+            return {
+                ...node,
+                px: cx + Math.cos(slot.angle) * ringX * slot.radius,
+                py: cy + Math.sin(slot.angle) * ringY * slot.radius,
+                scale: 1,
+                zIndex: node.type === 'skill' ? 110 : 100,
+            };
+        }
+
         let x = node.x * cosY - node.z * sinY;
         let z = node.z * cosY + node.x * sinY;
         let y = node.y * cosX - z * sinX;
@@ -323,40 +420,10 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
         return { ...node, px, py, scale: depthScale, zIndex: Math.floor(depthScale * 100) };
     });
 
-    if (ctx) {
-        linksRef.current.forEach(link => {
-            const source = projectedNodes.find(n => n.id === link.source);
-            const target = projectedNodes.find(n => n.id === link.target);
 
-            if (source && target) {
-                const isConnected = hoveredId && (link.source === hoveredId || link.target === hoveredId);
-                const isHoverMode = !!hoveredId && interactive;
-
-                ctx.beginPath();
-                ctx.moveTo(source.px, source.py);
-                ctx.lineTo(target.px, target.py);
-
-                if (isHoverMode) {
-                    if (isConnected) {
-                        ctx.strokeStyle = '#0ea5e9';
-                        ctx.lineWidth = 2.5;
-                        ctx.globalAlpha = 1;
-                    } else {
-                        ctx.strokeStyle = '#cbd5e1';
-                        ctx.lineWidth = 0.5;
-                        ctx.globalAlpha = 0.05;
-                    }
-                } else {
-                    const avgScale = (source.scale + target.scale) / 2;
-                    ctx.strokeStyle = '#cbd5e1';
-                    ctx.lineWidth = 1.5;
-                    ctx.globalAlpha = Math.max(0.1, avgScale - 0.4);
-                }
-                ctx.stroke();
-            }
-        });
-        ctx.globalAlpha = 1;
-    }
+    // Work out where every node is drawn this frame, then draw links between those points
+    const frame: { el: HTMLDivElement; display: NodeVisual; zIndex: number; filter: string }[] = [];
+    const linkPoints = new Map<string, { x: number; y: number; s: number }>();
 
     projectedNodes.forEach(node => {
         const el = nodeElementsRef.current.get(node.id);
@@ -366,12 +433,14 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
         const isHighlighted = highlightedIds.has(node.id);
 
         // Where the node sits in the sphere
-        let target: NodeVisual = {
-            x: node.px,
-            y: node.py,
-            s: node.scale * Math.max(fit, 0.65),
-            o: Math.max(0.3, node.scale - 0.2),
-        };
+        let target: NodeVisual = isRadial
+            ? { x: node.px, y: node.py, s: radialFit, o: 0.95 }
+            : {
+                x: node.px,
+                y: node.py,
+                s: node.scale * Math.max(fit, 0.65),
+                o: Math.max(0.3, node.scale - 0.2),
+            };
         let zIndex = node.zIndex;
         let filter = 'none';
 
@@ -406,7 +475,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
         let display = target;
         const flight = flightsRef.current.get(node.id);
         if (flight) {
-            const t = reducedMotionRef.current ? 1 : Math.min(1, Math.max(0, (now - flight.start) / FLIGHT_MS));
+            const t = reducedMotionRef.current ? 1 : Math.min(1, Math.max(0, (now - flight.start) / (flight.duration ?? FLIGHT_MS)));
             const e = easeInOutCubic(t);
             display = {
                 x: mix(flight.from.x, target.x, e),
@@ -417,6 +486,8 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
             if (t >= 1) flightsRef.current.delete(node.id);
         }
         displayRef.current.set(node.id, display);
+        // Links stay anchored in the graph for nodes that are parked in the focus panel
+        linkPoints.set(node.id, slot ? { x: node.px, y: node.py, s: node.scale } : { x: display.x, y: display.y, s: node.scale });
 
         // Flying and focused nodes travel above the panel
         if (slot || flight) {
@@ -424,6 +495,56 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
             filter = 'none';
         }
 
+        frame.push({ el, display, zIndex, filter });
+    });
+
+    if (ctx) {
+        linksRef.current.forEach(link => {
+            const source = linkPoints.get(link.source);
+            const target = linkPoints.get(link.target);
+
+            if (source && target) {
+                const isConnected = hoveredId && (link.source === hoveredId || link.target === hoveredId);
+                const isHoverMode = !!hoveredId && interactive;
+
+                ctx.beginPath();
+                ctx.moveTo(source.x, source.y);
+                if (isRadial) {
+                    // Bow each link towards the centre so the rings read as a connection graph
+                    const mx = (source.x + target.x) / 2;
+                    const my = (source.y + target.y) / 2;
+                    ctx.quadraticCurveTo(mx + (cx - mx) * 0.35, my + (cy - my) * 0.35, target.x, target.y);
+                } else {
+                    ctx.lineTo(target.x, target.y);
+                }
+
+                if (isHoverMode) {
+                    if (isConnected) {
+                        ctx.strokeStyle = '#0ea5e9';
+                        ctx.lineWidth = 2.5;
+                        ctx.globalAlpha = 1;
+                    } else {
+                        ctx.strokeStyle = '#cbd5e1';
+                        ctx.lineWidth = 0.5;
+                        ctx.globalAlpha = 0.05;
+                    }
+                } else if (isRadial) {
+                    ctx.strokeStyle = '#cbd5e1';
+                    ctx.lineWidth = 1.25;
+                    ctx.globalAlpha = 0.3;
+                } else {
+                    const avgScale = (source.s + target.s) / 2;
+                    ctx.strokeStyle = '#cbd5e1';
+                    ctx.lineWidth = 1.5;
+                    ctx.globalAlpha = Math.max(0.1, avgScale - 0.4);
+                }
+                ctx.stroke();
+            }
+        });
+        ctx.globalAlpha = 1;
+    }
+
+    frame.forEach(({ el, display, zIndex, filter }) => {
         el.style.transform = `translate3d(${display.x}px, ${display.y}px, 0) translate(-50%, -50%) scale(${display.s})`;
         el.style.zIndex = zIndex.toString();
         el.style.opacity = display.o.toString();
@@ -449,7 +570,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
 
   // Interaction Handlers (pointer events cover mouse, touch and pen)
   const handlePointerDown = (e: React.PointerEvent) => {
-    if (!interactive || focusSetRef.current.size > 0) return;
+    if (!interactive || focusSetRef.current.size > 0 || layoutRef.current === 'radial') return;
     isDraggingRef.current = true;
     dragDistanceRef.current = 0;
     lastMouseRef.current = { x: e.clientX, y: e.clientY };
@@ -490,7 +611,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
   return (
     <div
         ref={containerRef}
-        className={`relative w-full overflow-clip scroll-mt-24 ${interactive && !focusedId ? 'cursor-grab active:cursor-grabbing touch-pan-y select-none' : ''} ${className}`}
+        className={`relative w-full overflow-clip scroll-mt-24 ${interactive && !focusedId && layout === 'sphere' ? 'cursor-grab active:cursor-grabbing touch-pan-y select-none' : ''} ${className}`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}

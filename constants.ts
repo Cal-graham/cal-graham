@@ -123,7 +123,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Agentic AI Tools',
     categories: ['Agentic AI', 'RAG', 'Python', 'Google Cloud Platform', 'Tavily API'],
     description: 'Built AI research tools that automated one of the largest time-sinks in our business development pipeline. An agentic pipeline on Google Cloud Platform uses web research tools such as the Tavily API for network mapping and lead selection, and a RAG interface helps generate outreach, replacing discovery work that was previously done by hand.',
-    technologies: ['Software'],
+    technologies: ['AI', 'Python', 'Cloud (GCP)'],
     imageUrl: './outreach-app.jpg',
     hoverImageUrl: './outreach-app.jpg',
     videoUrl: './outreach-app.mp4'
@@ -133,7 +133,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Downtime Detection (PatchCore)',
     categories: ['Computer Vision', 'Anomaly Detection', 'PatchCore', 'Python', 'Cloud ML Pipelines'],
     description: 'Built an unsupervised cloud training pipeline for a PatchCore anomaly-detection model that recognizes, highlights and categorizes downtime events on manufacturing lines. Because it needs no labelled data, improvement teams can target rare, low-frequency downtime events that are hard to catch by hand.',
-    technologies: ['Software', 'AI'],
+    technologies: ['AI', 'Computer Vision', 'Python', 'Cloud (GCP)'],
     imageUrl: './patchcore.png',
     hoverImageUrl: './patchcore.png'
   },
@@ -142,7 +142,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Travel & Expense Automation',
     categories: ['Gemini API', 'OCR', 'Gmail & Calendar APIs', 'Cloud Run & Pub/Sub', 'Firestore', 'Zoho Expense API', 'Slack Bot'],
     description: 'A two-part system that takes the admin out of business travel. The first service watches each user\'s Gmail through Pub/Sub and uses Gemini with structured schemas to extract flight, hotel, train and car-rental confirmations. It matches updates to existing trips by vendor and confirmation code, so changes and cancellations flow straight through to their Google Calendar, and a Slack bot answers travel questions and sends weekly digests. Chargeable bookings are handed to the second app, which files them in Zoho Expense and uses Gemini Vision OCR to match scanned bank-statement transactions to each expense, recording the amount actually charged with the receipt attached.',
-    technologies: ['Software', 'AI'],
+    technologies: ['AI', 'Python', 'Web Development', 'Cloud (GCP)'],
     imageUrl: './transactions.png',
     hoverImageUrl: './transactions.png'
   },
@@ -151,7 +151,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Satellite Attitude Controller',
     categories: ['Python', 'C', 'MATLAB', 'Simulink', 'PID Control', 'SolidWorks', 'Additive Manufacturing', 'Hardware Design'],
     description: 'Five years on Queen\'s Space Engineering Team (QSET): first as a team member, then leading the five-engineer Attitude Determination and Control (ADCS) subteam, and finally as technical advisor. As lead, my subteam designed and built an ADCS payload that flew on a stratospheric balloon later that year. The work included firmware and a 3D-printed single-axis testbench for a 1U CubeSat reaction wheel, with PID control validated in MATLAB/Simulink simulations.',
-    technologies: ['Software', 'Control Systems', 'Hardware', 'Simulation', 'CAD'],
+    technologies: ['Embedded Systems', 'Control Systems', 'Hardware', 'Simulation', 'CAD'],
     imageUrl: './attitudecontrol.png',
     hoverImageUrl: './attitudecontrol.png',
     videoUrl: './adcs-testbench.mp4'
@@ -161,7 +161,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'GeoPhoto Explorer',
     categories: ['React', 'Leaflet', 'Gemini API', 'Adobe Lightroom API', 'Firebase'],
     description: 'A web app that maps my travel photography. It reads GPS coordinates from each photo\'s EXIF data, syncs albums from Adobe Lightroom (OAuth with PKCE) and plots them on a Leaflet world map. Google Gemini, called through Firebase AI Logic, writes a short history fact for each location using Google Search data based on location and photo content tags.',
-    technologies: ['Software', 'AI'],
+    technologies: ['AI', 'Web Development', 'Cloud (GCP)'],
     imageUrl: './travel-map.jpg',
     hoverImageUrl: './travel-map.jpg',
     videoUrl: './travel-map.mp4',
@@ -181,7 +181,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Lab Organizer',
     categories: ['Python', 'Flask', 'User-Oriented Design', 'Networked Computing'],
     description: 'Built a cloud-based tool to organize and track customer and internal samples in VIAVI\'s optical telecom R&D lab. It passively scanned the lab network to keep each sample\'s location and last use up to date. Used by 10-20 engineers on the R&D team, it reclaimed about 5% of their engineering time.',
-    technologies: ['Software'],
+    technologies: ['Python', 'Web Development'],
     imageUrl: './VIAVIcats.jpg',
     hoverImageUrl: './VIAVIcats.jpg'
   },
@@ -199,7 +199,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'IoT Espresso Machine',
     categories: ['IoT', 'Raspberry Pi', 'ESP8266', 'Python', 'Flask', 'Sensors', 'Data Analysis'],
     description: 'Built a real-time sensor system into an espresso machine: a Raspberry Pi reads boiler pressure, group-head and boiler temperature, and group-head flow through two ADS1115 ADCs, with acquisition and smoothing on separate threads. A Python (Flask) web app plots the live data against brew profiles, such as a light-roast pressure ramp, for precise brew control. A later version moved the sensors onto ESP8266 boards that stream readings to the Pi.',
-    technologies: ['Software', 'IoT', 'Hardware'],
+    technologies: ['IoT', 'Python', 'Web Development', 'Hardware'],
     imageUrl: './beans.1.png',
     hoverImageUrl: './beans.1.png'
   },
@@ -217,7 +217,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Networked 3D Printer Controller',
     categories: ['Raspberry Pi', 'OctoPrint', 'Python', 'IoT', 'Sensors', 'Additive Manufacturing'],
     description: 'Turned a Raspberry Pi running a customized OctoPrint server into a networked controller for my 3D printer. It handles remote file upload, print job control and webcam monitoring, with temperature and humidity sensors to keep prints reliable.',
-    technologies: ['Software', 'Hardware', 'IoT'],
+    technologies: ['IoT', 'Hardware', 'Python'],
     imageUrl: './3dprinter.jpg',
     hoverImageUrl: './3dprinter.jpg'
   },
@@ -226,7 +226,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'MQTT Synchronous Lights',
     categories: ['ESP8266', 'MQTT', 'HiveMQ', 'C', 'Sensors', 'Networked Computing'],
     description: 'Built an MQTT publish/subscribe system on HiveMQ that keeps two sets of lights on separate ESP8266 boards in sync within a few seconds. Each set is controlled by my own RLC circuit acting as a capacitive sensor.',
-    technologies: ['Hardware', 'IoT', 'Software'],
+    technologies: ['IoT', 'Embedded Systems', 'Hardware'],
     imageUrl: './ESP8266.jpg',
     hoverImageUrl: './ESP8266.jpg'
   },
@@ -235,7 +235,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Camera Repair & Lens Adapters',
     categories: ['SolidWorks', 'Optics', 'Hardware Diagnosis', 'Reclamation', 'Additive Manufacturing'],
     description: 'Reverse-engineered and repaired digital camera mechanisms, and designed 3D-printed adapters to mount Nikon, Canon and Sony film lenses on a Sony E-mount body. Most of my photography is shot this way; see examples on my travel photo site.',
-    technologies: ['CAD', 'Optics', 'Hardware'],
+    technologies: ['CAD', 'Optics', 'Hardware', 'Fabrication'],
     imageUrl: './adaptor.jpg',
     hoverImageUrl: './adaptor.jpg',
     link: 'https://decisive-mapper-306615.web.app/',

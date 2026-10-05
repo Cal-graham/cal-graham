@@ -1,13 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PROJECTS } from '../constants';
 import { ProjectItem } from '../types';
-import { X, LayoutGrid, Network, ExternalLink } from 'lucide-react';
+import { X, ExternalLink } from 'lucide-react';
 import FadeIn from './FadeIn';
 import NodeCloud from './NodeCloud';
+import GraphViewSwitch, { ProjectsView } from './GraphViewSwitch';
+import CursorHint from './CursorHint';
 import ProjectMedia from './ProjectMedia';
 
 // Control the spacing of the nodes in the 3D cloud
 const NODE_CLOUD_SCALE = 1.0;
+
+// The graph opens as the 3D web and morphs into the 2D connection graph once it is fully in view
+const AUTO_SWITCH_VISIBLE_RATIO = 0.9;
+const AUTO_SWITCH_DELAY_MS = 900;
+const CALLOUT_MS = 7000;
 
 // Modal behaviour: close on Escape, lock page scroll, focus the close button
 const useModal = (onClose: () => void) => {
@@ -112,63 +119,90 @@ const ProjectModal: React.FC<{ project: ProjectItem; onClose: () => void }> = ({
 };
 
 const Projects: React.FC = () => {
-  const [viewMode, setViewMode] = useState<'3d' | 'grid'>(() => (prefersGrid() ? 'grid' : '3d'));
+  const [view, setView] = useState<ProjectsView>(() => (prefersGrid() ? 'grid' : 'sphere'));
+  const [showCallout, setShowCallout] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
+  const graphRef = useRef<HTMLDivElement>(null);
+  // Set once the visitor has interacted with the graph or chosen a view; stops the automatic switch
+  const visitorTookOverRef = useRef(false);
+  const autoSwitchedRef = useRef(false);
 
   const closeProject = React.useCallback(() => setSelectedProject(null), []);
+
+  const chooseView = (next: ProjectsView) => {
+    visitorTookOverRef.current = true;
+    setShowCallout(false);
+    setView(next);
+  };
+
+  const isGraph = view !== 'grid';
+
+  // Morph from the 3D web to the 2D connection graph the first time the graph is fully in view
+  useEffect(() => {
+    const el = graphRef.current;
+    if (!isGraph || !el || autoSwitchedRef.current || visitorTookOverRef.current) return;
+    let timer = 0;
+    const observer = new IntersectionObserver(([entry]) => {
+      window.clearTimeout(timer);
+      if (entry.intersectionRatio < AUTO_SWITCH_VISIBLE_RATIO) return;
+      // A short pause lets the visitor see the 3D web before it flattens
+      timer = window.setTimeout(() => {
+        if (visitorTookOverRef.current || autoSwitchedRef.current) return;
+        autoSwitchedRef.current = true;
+        setView('radial');
+        setShowCallout(true);
+        observer.disconnect();
+      }, AUTO_SWITCH_DELAY_MS);
+    }, { threshold: [0, AUTO_SWITCH_VISIBLE_RATIO] });
+    observer.observe(el);
+    return () => { observer.disconnect(); window.clearTimeout(timer); };
+  }, [isGraph]);
+
+  useEffect(() => {
+    if (!showCallout) return;
+    const timer = window.setTimeout(() => setShowCallout(false), CALLOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [showCallout]);
 
   return (
     <section id="projects" className="py-20 bg-white">
       {/* Header Container - Constrained Width */}
       <div className="max-w-6xl mx-auto px-6 md:px-12 lg:px-24">
-        <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-8 relative inline-block">
+        <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-12 relative inline-block">
           Projects
           <span className="absolute -bottom-3 left-0 w-1/2 h-1 bg-accent rounded-full"></span>
         </h2>
-
-        <div className="flex justify-between items-center mb-8">
-            <p className="text-sm text-slate-500 hidden md:block">
-                {viewMode === '3d' ? 'Drag to rotate • Click a project or skill to explore it' : 'Click a project for details'}
-            </p>
-            <div className="bg-slate-100 p-1 rounded-lg flex items-center shadow-inner ml-auto">
-                <button
-                    onClick={() => setViewMode('3d')}
-                    aria-pressed={viewMode === '3d'}
-                    aria-label="3D web view"
-                    className={`p-2 rounded-md transition-all flex items-center gap-2 text-sm font-medium ${viewMode === '3d' ? 'bg-white text-accent shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                >
-                    <Network size={18} />
-                    <span className="hidden sm:inline">3D Web</span>
-                </button>
-                <button
-                    onClick={() => setViewMode('grid')}
-                    aria-pressed={viewMode === 'grid'}
-                    aria-label="Grid view"
-                    className={`p-2 rounded-md transition-all flex items-center gap-2 text-sm font-medium ${viewMode === 'grid' ? 'bg-white text-accent shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                >
-                    <LayoutGrid size={18} />
-                    <span className="hidden sm:inline">Grid View</span>
-                </button>
-            </div>
-        </div>
       </div>
 
       <FadeIn className="w-full">
-        {viewMode === '3d' ? (
-          <div className="w-full min-h-[95vh] bg-slate-900 relative overflow-clip shadow-inner">
+        {isGraph ? (
+          <div
+            ref={graphRef}
+            className="w-full min-h-[95vh] bg-slate-900 relative overflow-clip shadow-inner"
+            // Any interaction with the graph cancels the automatic switch to 2D
+            onPointerDown={() => { visitorTookOverRef.current = true; }}
+            onKeyDown={() => { visitorTookOverRef.current = true; }}
+          >
              {/* Dark background grid effect */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none" />
+            <GraphViewSwitch view={view} onChange={chooseView} showCallout={showCallout} placement="overlay" />
+            <CursorHint
+              areaRef={graphRef}
+              text={view === 'radial' ? 'Hover to trace connections · Click a bubble to explore' : 'Drag to rotate · Click a bubble to explore'}
+            />
             {/* The sphere stage stays 95vh; the section grows when a details panel opens */}
             <NodeCloud
               interactive={true}
               scale={NODE_CLOUD_SCALE}
               className="min-h-[95vh]"
               stageClassName="h-[95vh]"
+              layout={view === 'radial' ? 'radial' : 'sphere'}
             />
           </div>
         ) : (
           /* Grid View Fallback - Constrained Width */
           <div className="max-w-6xl mx-auto px-6 md:px-12 lg:px-24">
+              <GraphViewSwitch view={view} onChange={chooseView} showCallout={false} placement="row" />
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {PROJECTS.map((project) => (
                     <button

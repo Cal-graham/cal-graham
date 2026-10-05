@@ -41,7 +41,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     period: '2021 - 2022',
     description: [
       'Managed key stakeholder relationships to maintain and expand a critical $10M project.',
-      'Developed a cloud-based logistics applet, reclaiming ~5% of internal R&D engineering time.',
+      'Developed a cloud-based sample-tracking tool used by 10-20 R&D engineers, reclaiming ~5% of internal R&D engineering time.',
       'Executed rigorous testing of next-gen optical technologies to inform product development roadmaps.'
     ]
   },
@@ -79,7 +79,7 @@ export const VOLUNTEERING: VolunteerItem[] = [
     organization: "Queen's Space Engineering Team (QSET)",
     period: '2018 - 2021',
     details: [
-      'Led an engineering team in the end-to-end development and launch of an ADCS payload on a CSA stratospheric balloon.',
+      'Led a team of 5 engineers in the end-to-end development and launch of an ADCS payload on a CSA stratospheric balloon.',
       'Defined technical roadmap aligning with Canadian Satellite Design Challenge milestones.'
     ]
   },
@@ -117,8 +117,8 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'OutreachAI',
     title: 'Agentic AI Tools',
-    categories: ['Agentic AI', 'Python', 'REST API', 'Google Cloud Computing', 'Value-Driven Design'],
-    description: 'Created an internal-facing Agentic AI tool to improve the quality of client outreach. The tool runs on GCP (Google Cloud Compute), using AgenticAI to leverage tools such as TavilyAPI, automating a large portion of the client discovery process.',
+    categories: ['Agentic AI', 'Python', 'REST APIs', 'Google Cloud Platform', 'Tavily API'],
+    description: 'Built an internal agentic AI tool that automated one of the largest time-sinks in our business development pipeline: researching prospective clients and mapping our network to them. The agent runs on Google Cloud Platform and uses web research tools such as the Tavily API to do the discovery work that was previously done by hand.',
     technologies: ['Software'],
     imageUrl: './OutreachAI.jpg',
     hoverImageUrl: './OutreachAI.jpg'
@@ -127,7 +127,7 @@ export const PROJECTS: ProjectItem[] = [
     id: 'adcs',
     title: 'Satellite Attitude Controller',
     categories: ['Python', 'C', 'MATLAB', 'Simulink', 'PID Control', 'SolidWorks', 'Additive Manufacturing', 'Hardware Design'],
-    description: 'Developed firmware and testbench hardware for a "1U" CubeSat reaction-wheel control system, implementing PID control logic for precise orientation stability. This includes Simulink and MATLAB simulations and a 3D printed testbench with computational and electrical hardware required to run and test PID control systems in a single axis.',
+    description: 'Three years on Queen\'s Space Engineering Team (QSET): first as a team member, then leading the five-engineer Attitude Determination and Control (ADCS) subteam, and finally as technical advisor. As lead, my subteam designed and built an ADCS payload that flew on a stratospheric balloon later that year. The work included firmware and a 3D-printed single-axis testbench for a 1U CubeSat reaction wheel, with PID control validated in MATLAB/Simulink simulations.',
     technologies: ['Software', 'Control Systems', 'Hardware', 'Simulation', 'CAD'],
     imageUrl: './attitudecontrol.png',
     hoverImageUrl: './attitudecontrol.png',
@@ -136,8 +136,8 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'geophoto',
     title: 'GeoPhoto Explorer',
-    categories: ['Web App', 'Gemini API', 'Adobe Lightroom API', 'Interactive Maps', 'Firebase Hosting'],
-    description: 'A web app that plots my geotagged travel photography on an interactive world map. Albums sync automatically from Adobe Lightroom, and each photo is paired with an AI-generated history fact about its location using Google Gemini. A screensaver mode flies between locations around the map.',
+    categories: ['React', 'Leaflet', 'Gemini API', 'Adobe Lightroom API', 'Firebase'],
+    description: 'A web app that maps my travel photography. It reads GPS coordinates from each photo\'s EXIF data, syncs albums from Adobe Lightroom (OAuth with PKCE) and plots them on a Leaflet world map. Google Gemini, called through Firebase AI Logic with Google Search grounding, writes a short history fact for each location and falls back across models when free-tier quotas run out. It is hosted on Firebase with App Check and owner-only database writes, and an offline kiosk build pre-downloads map tiles so it can run as a screensaver.',
     technologies: ['Software', 'AI'],
     imageUrl: './travel-map.jpg',
     hoverImageUrl: './travel-map.jpg',
@@ -147,8 +147,8 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'eclipse',
     title: 'Radio Telescope Thesis',
-    categories: ['Optical Design', 'MATLAB', 'Python', 'SolidWorks', 'Research'],
-    description: 'Designed optical geometry and sensor configuration for a low-cost radio telescope with the intention of capturing spatial eclipse data through cloud cover. Created simulation to understand effective dynamic range given different design choices and use-cases.',
+    categories: ['Radio Astronomy', 'Optical Design', 'MATLAB', 'Python', 'SolidWorks', 'Research'],
+    description: 'Undergraduate thesis: designed a low-cost radio telescope to observe a solar eclipse through cloud cover. The design fits a 9-pixel receiver array into a 2 m Cassegrain dish, with enough dynamic range to pierce cloud cover and resolve each stage of the eclipse. Built simulations to compare how design choices affected dynamic range across use cases.',
     technologies: ['Optics', 'CAD', 'Simulation'],
     imageUrl: './radiotele.png',
     hoverImageUrl: './radiotele.png'
@@ -156,17 +156,17 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'VIAVIapp',
     title: 'Lab Organizer',
-    categories: ['Python-Flask', 'User-Oriented Design', 'Networked Computing'],
-    description: 'Created an internal-facing tool to automate organization and tracking of customer and internal samples in Optical Telecom R&D laboratory. The tool passively scanned the lab network to locate and maintain last-known use for all samples.',
+    categories: ['Python', 'Flask', 'User-Oriented Design', 'Networked Computing'],
+    description: 'Built a cloud-based tool to organize and track customer and internal samples in VIAVI\'s optical telecom R&D lab. It passively scanned the lab network to keep each sample\'s location and last use up to date. Used by 10-20 engineers on the R&D team, it reclaimed about 5% of their engineering time.',
     technologies: ['Software'],
     imageUrl: './VIAVIcats.jpg',
     hoverImageUrl: './VIAVIcats.jpg'
   },
   {
     id: 'headband',
-    title: 'Volunteering - Face Shields',
+    title: 'COVID-19 Face Shields',
     categories: ['SolidWorks', 'SketchUp', 'Additive Manufacturing', 'User-Oriented Design'],
-    description: 'Designed, fabricated, and donated 200+ 3D printed face shields for local hospital staff during Covid-19 shortages.',
+    description: 'During early COVID-19 shortages, designed, 3D-printed and donated 200+ face shields to hospital staff in Port Perry and Burlington, all within a month.',
     technologies: ['CAD', 'Fabrication'],
     imageUrl: './headband.jpg',
     hoverImageUrl: './headband.jpg'
@@ -174,8 +174,8 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'espresso',
     title: 'IoT Espresso Machine',
-    categories: ['IoT', 'Python-Flask', 'Data Analysis', 'Sensors', 'Networked Computing'],
-    description: 'Engineered a real-time sensor array integrated into an espresso machine. Developed a network interface in Python (Flask) to stream pressure telemetry for precise brew control.',
+    categories: ['IoT', 'Raspberry Pi', 'Python', 'Flask', 'Sensors', 'Data Analysis'],
+    description: 'Built a real-time sensor system into an espresso machine: a Raspberry Pi reads boiler pressure, group-head and boiler temperature, and group-head flow through two ADS1115 ADCs, with acquisition and smoothing on separate threads. A Python (Flask) web app plots the live data against brew profiles, such as a light-roast pressure ramp, for precise brew control.',
     technologies: ['Software', 'IoT', 'Hardware'],
     imageUrl: './profile.png',
     hoverImageUrl: './profile.png'
@@ -183,8 +183,8 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'climbing',
     title: 'Adjustable Climbing Wall',
-    categories: ['SolidWorks', '3D-Printing', 'Additive Manufacturing'],
-    description: 'Designed and fabricated a 300 sq ft adjustable climbing wall. Utilized SolidWorks for structural modeling and 3D printing for custom holds manufacturing.',
+    categories: ['SolidWorks', '3D Printing', 'Additive Manufacturing'],
+    description: 'Designed and built a 300 sq ft climbing wall with an adjustable angle. Modelled the structure in SolidWorks, then designed and 3D-printed about 100 custom holds over roughly three months.',
     technologies: ['Fabrication', 'CAD'],
     imageUrl: './climbing wall.jpg',
     hoverImageUrl: './climbing wall.jpg'
@@ -192,8 +192,8 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'printer',
     title: 'Networked 3D Printer Controller',
-    categories: ['Python', 'HTML', 'CSS', 'IoT', 'Networking', 'Additive Manufacturing'],
-    description: 'Deployed and customized an Octoprint-based server for remote 3D printer management. Integrated custom electronics and server logic to enhance print reliability.',
+    categories: ['Raspberry Pi', 'OctoPrint', 'Python', 'IoT', 'Sensors', 'Additive Manufacturing'],
+    description: 'Turned a Raspberry Pi running a customized OctoPrint server into a networked controller for my 3D printer. It handles remote file upload, print job control and webcam monitoring, with temperature and humidity sensors to keep prints reliable.',
     technologies: ['Software', 'Hardware', 'IoT'],
     imageUrl: './3dprinter.jpg',
     hoverImageUrl: './3dprinter.jpg'
@@ -201,19 +201,21 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: 'mqttlights',
     title: 'MQTT Synchronous Lights',
-    categories: ['ESP8266', 'IoT-HiveMQ', 'C', 'Sensors', 'Networked Computing'],
-    description: 'Used HiveMQ to create an example MQTT Pub/Sub system to synchronize 2 sets of lights using ESP8266 boards. Created my own RLC circuit functioning as capacitive sensors to control the lights.',
+    categories: ['ESP8266', 'MQTT', 'HiveMQ', 'C', 'Sensors', 'Networked Computing'],
+    description: 'Built an MQTT publish/subscribe system on HiveMQ that keeps two sets of lights on separate ESP8266 boards in sync within a few seconds. Each set is controlled by my own RLC circuit acting as a capacitive sensor.',
     technologies: ['Hardware', 'IoT', 'Software'],
     imageUrl: './ESP8266.jpg',
     hoverImageUrl: './ESP8266.jpg'
   },
   {
     id: 'camera',
-    title: 'Camera Repair',
-    categories: ['SolidWorks', 'Optics', 'Hardware-diagnosis', 'Reclamation', 'Additive Manufacturing'],
-    description: 'Reverse-engineered and repaired digital camera mechanisms. Designed 3D-printed adaptors to interface vintage film lenses with modern digital bodies.',
+    title: 'Camera Repair & Lens Adapters',
+    categories: ['SolidWorks', 'Optics', 'Hardware Diagnosis', 'Reclamation', 'Additive Manufacturing'],
+    description: 'Reverse-engineered and repaired digital camera mechanisms, and designed 3D-printed adapters to mount Nikon, Canon and Sony film lenses on a Sony E-mount body. Most of my photography is shot this way; see examples on my travel photo site.',
     technologies: ['CAD', 'Optics', 'Hardware'],
     imageUrl: './adaptor.jpg',
-    hoverImageUrl: './adaptor.jpg'
+    hoverImageUrl: './adaptor.jpg',
+    link: 'https://decisive-mapper-306615.web.app/',
+    linkLabel: 'See the photos'
   }
 ];

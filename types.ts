@@ -27,6 +27,7 @@ export interface ProjectItem {
   hoverImageUrl?: string;
   videoUrl?: string;
   link?: string;
+  linkLabel?: string;
 }
 
 export interface SkillCategory {

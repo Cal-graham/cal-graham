@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { PROJECTS } from '../constants';
 import { GraphNode, GraphLink } from '../types';
+import FocusPanel from './FocusPanel';
 
 const SPHERE_RADIUS = 280;
 const FOCAL_LENGTH = 800;
@@ -12,9 +13,20 @@ const FIT_PADDING = 100;
 // Pointer travel (px) beyond which a press counts as a drag rather than a click
 const DRAG_THRESHOLD = 5;
 
+// Focus animation: bubbles fly between the sphere and the focus panel
+const FLIGHT_MS = 700;
+const FLIGHT_STAGGER_MS = 60;
+const PANEL_EXIT_MS = 250;
+const MAX_BACKGROUND_BLUR_PX = 6;
+
+const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const mix = (a: number, b: number, t: number) => a + (b - a) * t;
+
+interface NodeVisual { x: number; y: number; s: number; o: number; }
+interface Flight { from: NodeVisual; start: number; }
+
 interface NodeCloudProps {
   interactive?: boolean;
-  onNodeClick?: (id: string, type: 'project' | 'skill') => void;
   className?: string;
   showLabels?: boolean;
   scale?: number;
@@ -22,7 +34,6 @@ interface NodeCloudProps {
 
 const NodeCloud: React.FC<NodeCloudProps> = ({
   interactive = true,
-  onNodeClick,
   className = '',
   showLabels = true,
   scale = 1
@@ -45,6 +56,17 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
   const dragDistanceRef = useRef(0);
   const isVisibleRef = useRef(true);
   const reducedMotionRef = useRef(false);
+
+  // Focus State: React state drives the panel, refs drive the animation loop
+  const [focusedId, setFocusedId] = useState<string | null>(null);
+  const [panelClosing, setPanelClosing] = useState(false);
+  const focusSetRef = useRef<Set<string>>(new Set());
+  const slotElementsRef = useRef<Map<string, HTMLElement>>(new Map());
+  const displayRef = useRef<Map<string, NodeVisual>>(new Map());
+  const flightsRef = useRef<Map<string, Flight>>(new Map());
+  const backgroundBlurRef = useRef({ from: 0, to: 0, start: 0 });
+  const closeTimerRef = useRef<number>(0);
+  const lastFocusedRef = useRef<string | null>(null);
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -110,10 +132,98 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
       });
     });
 
+    // A project's skills are listed in the order the project declares them
+    newNodes.forEach(node => {
+      if (node.type !== 'project') return;
+      const project = PROJECTS.find(p => p.id === node.id);
+      if (project) node.relatedIds = project.technologies.map(t => `skill-${t}`);
+    });
+
     nodesRef.current = newNodes;
     linksRef.current = newLinks;
     setNodes(newNodes);
   }, [scale]);
+
+  // --- Focus mode ---
+
+  const getBackgroundBlur = (now: number) => {
+    const { from, to, start } = backgroundBlurRef.current;
+    const t = reducedMotionRef.current ? 1 : Math.min(1, Math.max(0, (now - start) / FLIGHT_MS));
+    return mix(from, to, easeInOutCubic(t));
+  };
+
+  // Send the given node (and its related nodes) to the panel, or everything back to the sphere when id is null
+  const changeFocus = useCallback((id: string | null) => {
+    const now = performance.now();
+    const node = id ? nodesRef.current.find(n => n.id === id) : undefined;
+    const order = node ? [node.id, ...node.relatedIds] : [];
+    const previous = focusSetRef.current;
+    const next = new Set(order);
+
+    // Only nodes entering, leaving or moving between slots need to fly
+    nodesRef.current.forEach(n => {
+      if (!previous.has(n.id) && !next.has(n.id)) return;
+      const current = displayRef.current.get(n.id);
+      if (!current) return;
+      const index = order.indexOf(n.id);
+      flightsRef.current.set(n.id, {
+        from: { ...current },
+        start: now + (index > 0 ? index * FLIGHT_STAGGER_MS : 0),
+      });
+    });
+
+    backgroundBlurRef.current = { from: getBackgroundBlur(now), to: node ? 1 : 0, start: now };
+    focusSetRef.current = next;
+    hoveredNodeIdRef.current = null;
+    isDraggingRef.current = false;
+  }, []);
+
+  const openFocus = useCallback((id: string) => {
+    window.clearTimeout(closeTimerRef.current);
+    // Bring the whole web into view (below the fixed navbar) so the panel's top-left is visible
+    containerRef.current?.scrollIntoView({
+      behavior: reducedMotionRef.current ? 'auto' : 'smooth',
+      block: 'start',
+    });
+    lastFocusedRef.current = id;
+    changeFocus(id);
+    setFocusedId(id);
+    setPanelClosing(false);
+  }, [changeFocus]);
+
+  // Keyboard users get focus handed back to the node they opened; mouse users don't need it
+  const closeFocus = useCallback((viaKeyboard: boolean = false) => {
+    if (!viaKeyboard) lastFocusedRef.current = null;
+    changeFocus(null);
+    setPanelClosing(true);
+    closeTimerRef.current = window.setTimeout(() => {
+      setFocusedId(null);
+      setPanelClosing(false);
+    }, PANEL_EXIT_MS);
+  }, [changeFocus]);
+
+  // Once the panel is gone (and the nodes are no longer inert), return keyboard focus to the node that was opened
+  useEffect(() => {
+    if (focusedId || !lastFocusedRef.current) return;
+    nodeElementsRef.current.get(lastFocusedRef.current)?.focus({ preventScroll: true });
+    lastFocusedRef.current = null;
+  }, [focusedId]);
+
+  useEffect(() => () => window.clearTimeout(closeTimerRef.current), []);
+
+  useEffect(() => {
+    if (!focusedId || panelClosing) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeFocus(true);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [focusedId, panelClosing, closeFocus]);
+
+  const registerSlot = useCallback((id: string) => (el: HTMLElement | null) => {
+    if (el) slotElementsRef.current.set(id, el);
+    else slotElementsRef.current.delete(id);
+  }, []);
 
   // Animation Loop
   const animate = useCallback(() => {
@@ -123,8 +233,11 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
     // Skip all work while scrolled out of view
     if (!isVisibleRef.current) return;
 
-    // Update Rotation
-    if (!isDraggingRef.current && !hoveredNodeIdRef.current && !reducedMotionRef.current) {
+    const now = performance.now();
+    const isFocused = focusSetRef.current.size > 0;
+
+    // Update Rotation (held still while a node is focused)
+    if (!isDraggingRef.current && !hoveredNodeIdRef.current && !reducedMotionRef.current && !isFocused) {
         targetRotationRef.current.y += ROTATION_SPEED;
     }
 
@@ -133,6 +246,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
 
     const ctx = canvasRef.current?.getContext('2d');
     const container = containerRef.current;
+    const containerRect = container.getBoundingClientRect();
     const width = container.clientWidth;
     const height = container.clientHeight;
     const cx = width / 2;
@@ -149,7 +263,14 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
     }
     if (ctx) ctx.clearRect(0, 0, width, height);
 
-    const hoveredId = hoveredNodeIdRef.current;
+    // Blur and dim the sphere behind the focus panel
+    const backgroundBlur = getBackgroundBlur(now);
+    if (canvasRef.current) {
+        canvasRef.current.style.filter = backgroundBlur > 0.01 ? `blur(${backgroundBlur * MAX_BACKGROUND_BLUR_PX}px)` : 'none';
+        canvasRef.current.style.opacity = String(1 - 0.75 * backgroundBlur);
+    }
+
+    const hoveredId = isFocused ? null : hoveredNodeIdRef.current;
     const highlightedIds = new Set<string>();
 
     if (hoveredId && interactive) {
@@ -215,40 +336,74 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
 
     projectedNodes.forEach(node => {
         const el = nodeElementsRef.current.get(node.id);
+        if (!el) return;
+
         const isHoverMode = !!hoveredId && interactive;
         const isHighlighted = highlightedIds.has(node.id);
 
-        if (el) {
-            let scale = node.scale * Math.max(fit, 0.65);
-            let opacity = Math.max(0.3, node.scale - 0.2);
-            let zIndex = node.zIndex;
-            let filter = 'none';
+        // Where the node sits in the sphere
+        let target: NodeVisual = {
+            x: node.px,
+            y: node.py,
+            s: node.scale * Math.max(fit, 0.65),
+            o: Math.max(0.3, node.scale - 0.2),
+        };
+        let zIndex = node.zIndex;
+        let filter = 'none';
 
-            if (isHoverMode) {
-                if (isHighlighted) {
-                    scale *= 1.1;
-                    opacity = 1;
-                    zIndex = 1000;
-                } else {
-                    opacity = 0.1;
-                    filter = 'grayscale(100%) blur(2px)';
-                    zIndex = 0;
-                }
-            }
-
-            el.style.transform = `translate3d(${node.px}px, ${node.py}px, 0) scale(${scale})`;
-            el.style.zIndex = zIndex.toString();
-            el.style.opacity = opacity.toString();
-            el.style.filter = filter;
-
-            if (showLabels) {
-                el.style.marginLeft = node.type === 'project' ? '-48px' : '-40px';
-                el.style.marginTop = node.type === 'project' ? '-48px' : '-10px';
+        if (isHoverMode) {
+            if (isHighlighted) {
+                target.s *= 1.1;
+                target.o = 1;
+                zIndex = 1000;
             } else {
-                el.style.marginLeft = '-6px';
-                el.style.marginTop = '-6px';
+                target.o = 0.1;
+                filter = 'grayscale(100%) blur(2px)';
+                zIndex = 0;
             }
         }
+
+        // Focused nodes land on their slot in the panel; the rest blur into the background
+        const slot = focusSetRef.current.has(node.id) ? slotElementsRef.current.get(node.id) : undefined;
+        if (slot) {
+            const r = slot.getBoundingClientRect();
+            target = {
+                x: r.left + r.width / 2 - containerRect.left,
+                y: r.top + r.height / 2 - containerRect.top,
+                s: 1,
+                o: 1,
+            };
+        } else if (backgroundBlur > 0.01) {
+            target.o = mix(target.o, 0.12, backgroundBlur);
+            filter = `grayscale(60%) blur(${backgroundBlur * MAX_BACKGROUND_BLUR_PX}px)`;
+        }
+
+        // Blend from where the node was when focus changed towards its target
+        let display = target;
+        const flight = flightsRef.current.get(node.id);
+        if (flight) {
+            const t = reducedMotionRef.current ? 1 : Math.min(1, Math.max(0, (now - flight.start) / FLIGHT_MS));
+            const e = easeInOutCubic(t);
+            display = {
+                x: mix(flight.from.x, target.x, e),
+                y: mix(flight.from.y, target.y, e),
+                s: mix(flight.from.s, target.s, e),
+                o: mix(flight.from.o, target.o, e),
+            };
+            if (t >= 1) flightsRef.current.delete(node.id);
+        }
+        displayRef.current.set(node.id, display);
+
+        // Flying and focused nodes travel above the panel
+        if (slot || flight) {
+            zIndex = 3000;
+            filter = 'none';
+        }
+
+        el.style.transform = `translate3d(${display.x}px, ${display.y}px, 0) translate(-50%, -50%) scale(${display.s})`;
+        el.style.zIndex = zIndex.toString();
+        el.style.opacity = display.o.toString();
+        el.style.filter = filter;
     });
   }, [interactive, showLabels, scale]);
 
@@ -270,7 +425,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
 
   // Interaction Handlers (pointer events cover mouse, touch and pen)
   const handlePointerDown = (e: React.PointerEvent) => {
-    if (!interactive) return;
+    if (!interactive || focusSetRef.current.size > 0) return;
     isDraggingRef.current = true;
     dragDistanceRef.current = 0;
     lastMouseRef.current = { x: e.clientX, y: e.clientY };
@@ -297,19 +452,21 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
   };
 
   const handleNodeClickInternal = (nodeId: string) => {
-      if (!interactive || !onNodeClick) return;
+      if (!interactive) return;
       // Ignore the click that ends a rotate-drag
       if (dragDistanceRef.current > DRAG_THRESHOLD) return;
-      const node = nodesRef.current.find(n => n.id === nodeId);
-      if (node) {
-          onNodeClick(node.id, node.type);
-      }
+      openFocus(nodeId);
   };
+
+  const focusedNode = focusedId ? nodes.find(n => n.id === focusedId) : undefined;
+  const relatedNodes = focusedNode
+    ? focusedNode.relatedIds.map(id => nodes.find(n => n.id === id)).filter((n): n is GraphNode => !!n)
+    : [];
 
   return (
     <div
         ref={containerRef}
-        className={`relative w-full h-full overflow-hidden ${interactive ? 'cursor-grab active:cursor-grabbing touch-pan-y select-none' : ''} ${className}`}
+        className={`relative w-full h-full overflow-hidden scroll-mt-24 ${interactive && !focusedId ? 'cursor-grab active:cursor-grabbing touch-pan-y select-none' : ''} ${className}`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -322,6 +479,8 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
             className="absolute inset-0 w-full h-full pointer-events-none"
         />
 
+        {/* Nodes are inert while focused: the panel's slots take clicks and keyboard focus instead */}
+        <div className="absolute inset-0" inert={!!focusedId}>
         {nodes.map(node => (
             <div
             key={node.id}
@@ -329,7 +488,7 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
             {...(interactive ? {
                 role: 'button',
                 tabIndex: 0,
-                'aria-label': node.type === 'project' ? `Project: ${node.text}` : `Projects using ${node.text}`,
+                'aria-label': node.type === 'project' ? `Project: ${node.text}` : `Skill: ${node.text}`,
             } : {})}
             onClick={(e) => {
                 e.stopPropagation();
@@ -367,6 +526,18 @@ const NodeCloud: React.FC<NodeCloudProps> = ({
             )}
             </div>
         ))}
+        </div>
+
+        {focusedNode && (
+            <FocusPanel
+                focused={focusedNode}
+                related={relatedNodes}
+                closing={panelClosing}
+                registerSlot={registerSlot}
+                onSelect={openFocus}
+                onClose={closeFocus}
+            />
+        )}
     </div>
   );
 };

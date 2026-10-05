@@ -1,23 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PROJECTS } from '../constants';
 import { ProjectItem } from '../types';
-import { X, LayoutGrid, Network, ChevronRight, ExternalLink } from 'lucide-react';
+import { X, LayoutGrid, Network, ExternalLink } from 'lucide-react';
 import FadeIn from './FadeIn';
 import NodeCloud from './NodeCloud';
+import ProjectMedia from './ProjectMedia';
 
 // Control the spacing of the nodes in the 3D cloud
 const NODE_CLOUD_SCALE = 1.0;
-
-// --- Helper for Image Fallback ---
-const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, title: string) => {
-  const target = e.currentTarget;
-  // Debug log to help identifying path issues
-  console.warn(`[Image Load Fail] Project: "${title}" | Tried path: ${target.src}`);
-
-  target.onerror = null; // Prevent infinite loop
-  // Use a professional placeholder service if local image fails
-  target.src = `https://placehold.co/800x600/1e293b/0ea5e9?text=${encodeURIComponent(title)}`;
-};
 
 // Modal behaviour: close on Escape, lock page scroll, focus the close button
 const useModal = (onClose: () => void) => {
@@ -42,41 +32,6 @@ const useModal = (onClose: () => void) => {
   }, [onClose]);
 
   return closeButtonRef;
-};
-
-// Shows the project's video when it has one (photo as the poster frame), otherwise the photo.
-// Video autoplays muted on loop, unless the visitor prefers reduced motion.
-const ProjectMedia: React.FC<{ project: ProjectItem; alt: string; controls?: boolean }> = ({ project, alt, controls = false }) => {
-  const [videoFailed, setVideoFailed] = useState(false);
-  const reducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (project.videoUrl && !videoFailed) {
-    return (
-      <video
-        src={project.videoUrl}
-        poster={project.imageUrl}
-        aria-label={alt || undefined}
-        className="w-full h-full object-cover"
-        autoPlay={!reducedMotion}
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        controls={controls || reducedMotion}
-        onError={() => setVideoFailed(true)}
-      />
-    );
-  }
-
-  return (
-    <img
-      src={project.imageUrl}
-      alt={alt}
-      loading="lazy"
-      className="w-full h-full object-cover"
-      onError={(e) => handleImageError(e, project.title)}
-    />
-  );
 };
 
 // Grid is the default on small screens where the 3D web is cramped
@@ -135,7 +90,7 @@ const ProjectModal: React.FC<{ project: ProjectItem; onClose: () => void }> = ({
               rel="noopener noreferrer"
               className="mb-8 inline-flex w-fit items-center gap-2 px-5 py-2.5 rounded-full bg-accent hover:bg-cyan-600 text-white text-sm font-medium transition-colors"
             >
-              Visit site
+              {project.linkLabel ?? 'Visit site'}
               <ExternalLink size={16} />
             </a>
           )}
@@ -156,72 +111,11 @@ const ProjectModal: React.FC<{ project: ProjectItem; onClose: () => void }> = ({
   );
 };
 
-const SkillModal: React.FC<{ skill: string; projects: ProjectItem[]; onSelectProject: (p: ProjectItem) => void; onClose: () => void }> = ({ skill, projects, onSelectProject, onClose }) => {
-  const closeButtonRef = useModal(onClose);
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={onClose}>
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="skill-modal-title"
-        className="bg-white rounded-xl w-full max-w-md p-6 shadow-xl animate-in zoom-in-95 duration-200"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
-          <h3 id="skill-modal-title" className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            Projects using <span className="text-accent">{skill}</span>
-          </h3>
-          <button ref={closeButtonRef} onClick={onClose} aria-label="Close" className="text-slate-400 hover:text-slate-600">
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="space-y-3">
-          {projects.map(p => (
-            <button
-              key={p.id}
-              onClick={() => onSelectProject(p)}
-              className="w-full flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all group text-left"
-            >
-              <div className="w-12 h-12 rounded-md overflow-hidden bg-slate-200 shrink-0">
-                <img
-                  src={p.imageUrl}
-                  alt=""
-                  className="w-full h-full object-cover"
-                  onError={(e) => handleImageError(e, p.title)}
-                />
-              </div>
-              <div className="flex-1">
-                <h4 className="font-bold text-slate-700 group-hover:text-accent transition-colors">{p.title}</h4>
-                <p className="text-xs text-slate-500 line-clamp-1">{p.categories.join(', ')}</p>
-              </div>
-              <ChevronRight size={16} className="text-slate-300 group-hover:text-accent" />
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const Projects: React.FC = () => {
   const [viewMode, setViewMode] = useState<'3d' | 'grid'>(() => (prefersGrid() ? 'grid' : '3d'));
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
-  const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
 
   const closeProject = React.useCallback(() => setSelectedProject(null), []);
-  const closeSkill = React.useCallback(() => setSelectedSkill(null), []);
-
-  const handleNodeClick = (nodeId: string, type: 'project' | 'skill') => {
-    if (type === 'project') {
-      const project = PROJECTS.find(p => p.id === nodeId);
-      if (project) setSelectedProject(project);
-    } else {
-      const nodeText = nodeId.replace('skill-', '');
-      setSelectedSkill(nodeText);
-    }
-  };
 
   return (
     <section id="projects" className="py-20 bg-white">
@@ -234,7 +128,7 @@ const Projects: React.FC = () => {
 
         <div className="flex justify-between items-center mb-8">
             <p className="text-sm text-slate-500 hidden md:block">
-                {viewMode === '3d' ? 'Drag to rotate • Click nodes to explore' : 'Click a project for details'}
+                {viewMode === '3d' ? 'Drag to rotate • Click a project or skill to explore it' : 'Click a project for details'}
             </p>
             <div className="bg-slate-100 p-1 rounded-lg flex items-center shadow-inner ml-auto">
                 <button
@@ -266,7 +160,6 @@ const Projects: React.FC = () => {
             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none" />
             <NodeCloud
               interactive={true}
-              onNodeClick={handleNodeClick}
               scale={NODE_CLOUD_SCALE}
             />
           </div>
@@ -317,18 +210,6 @@ const Projects: React.FC = () => {
             project={selectedProject}
             onClose={closeProject}
         />
-      )}
-
-      {selectedSkill && (
-          <SkillModal
-            skill={selectedSkill}
-            projects={PROJECTS.filter(p => p.technologies.includes(selectedSkill))}
-            onSelectProject={(p) => {
-                setSelectedSkill(null);
-                setSelectedProject(p);
-            }}
-            onClose={closeSkill}
-          />
       )}
     </section>
   );

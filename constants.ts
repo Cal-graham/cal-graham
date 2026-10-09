@@ -23,38 +23,42 @@ export const EXPERIENCES: ExperienceItem[] = [
     period: '2023 - Present',
     description: [
       {
+        label: 'Client delivery',
         text: 'Owned on-site delivery of projects across North America and Europe, leading client teams and direct reports to deliver solutions to high-value challenges such as:',
         subItems: [
-          'Restructured a client’s improvement portfolio to more than double its original value, including €5M in waste reductions that correspond to 300 tonnes of CO₂e.',
-          'Built a roadmap to scale operations with 2.5x organic revenue growth over 5 years, addressing operational challenges and saving $1.8M/yr in improved efficiencies.',
-          'Identified $8.2M of raw material waste within a commercial food packer.',
-          'Pinpointed a previously unknown phenomenon in a decades-old process causing 10% of waste at a highly regulated medical manufacturing site.'
+          'Restructured a client’s improvement portfolio to **more than double its original value**, including **€5M in waste reductions** that correspond to **300 tonnes of CO₂e**.',
+          'Built a roadmap to scale operations with 2.5x organic revenue growth over 5 years, addressing operational challenges and **saving $1.8M/yr** in improved efficiencies.',
+          'Identified **$8.2M of raw material waste** within a commercial food packer.',
+          'Pinpointed a previously unknown phenomenon in a decades-old process **causing 10% of waste** at a highly regulated medical manufacturing site.',
+          'Proposed and carried out a Carbon Accounting scope, using the GHG Protocol to **understand client impact**.'
         ]
       },
       {
-        text: 'As Global Tech Lead, enacted improvements to accounting, cybersecurity and cloud services, designed and maintained financial dashboards, and developed custom software tools, such as:',
+        label: 'Global Tech Lead',
+        text: 'Enacted improvements to accounting, cybersecurity and cloud services, designed and maintained financial dashboards, and developed custom software tools, such as:',
         subItems: [
-          'Created a cloud training pipeline (PatchCore) for anomaly detection in industrial settings, enabling improvement teams to target low-frequency downtime events.',
-          'Deployed AI-based research tools (an agentic pipeline and a RAG interface) to support business development through network mapping, lead selection and outreach generation.'
+          'Created a cloud training pipeline (PatchCore) for anomaly detection in industrial settings, **enabling improvement teams to target low-frequency downtime events**.',
+          'Deployed AI-based research tools (an agentic pipeline and a RAG interface) to **support business development** through network mapping, lead selection and outreach generation.'
         ]
-      },
-      'Proposed and carried out a Carbon Accounting scope, using the GHG Protocol to understand client impact.'
+      }
     ]
   },
   {
     id: 'viavi',
     role: 'Optical Engineer',
     company: 'VIAVI Solutions',
+    location: 'Ottawa, ON',
     period: '2021 - 2022',
     description: [
       'Designed and carried out test programs, turning experimental results into client outcomes.',
-      'Developed an internal logistics app (Python/Django/Flask) used by 10-20 R&D engineers, saving ~5% of internal R&D engineering time.'
+      'Developed an internal logistics app (Python/Django/Flask) used by 10-20 R&D engineers, **saving ~5% of internal R&D engineering time**.'
     ]
   },
   {
     id: 'queens-work',
     role: 'Faculty Support',
     company: "Queen's University",
+    location: 'Kingston, ON',
     period: '2018 - 2023',
     description: [
       'Multiple positions: Carbon Neutral Café, Engineering Course Development and Laboratory Technician.'
@@ -68,11 +72,13 @@ export const EDUCATION: EducationItem[] = [
     degree: 'Bachelor of Applied Science, Engineering Physics (Electrical Specialization)',
     institution: "Queen's University",
     period: '2018 - 2023',
-    details: [
-      '3.9 Cumulative GPA, Dean’s List.',
-      'Co-author: Design of a Simulator for Testing Satellite Attitude Determination and Control.',
-      'Applied Science Class of ’68 Scholarship and Victor Alfred Betts Scholarship recipient.'
-    ]
+    honours: [
+      '3.9 Cumulative GPA',
+      'Dean’s List',
+      'Applied Science Class of ’68 Scholarship',
+      'Victor Alfred Betts Scholarship'
+    ],
+    publication: 'Design of a Simulator for Testing Satellite Attitude Determination and Control.'
   }
 ];
 

@@ -1,4 +1,4 @@
-export type DescriptionPoint = string | { text: string; subItems: string[] };
+export type DescriptionPoint = string | { label: string; text: string; subItems: string[] };
 
 export interface ExperienceItem {
   id: string;
@@ -14,7 +14,8 @@ export interface EducationItem {
   degree: string;
   institution: string;
   period: string;
-  details: string[];
+  honours: string[];
+  publication?: string;
 }
 
 export interface ProjectItem {

@@ -68,3 +68,38 @@ html {
     animation: none;
   }
 }
+
+/* About graphic: pop-in / pop-out icon swaps, spinning planet and orbit */
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.2) rotate(-25deg); }
+  60% { opacity: 1; transform: scale(1.12) rotate(4deg); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes pop-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: scale(0.2) rotate(20deg); }
+}
+@keyframes planet-surface {
+  from { transform: translateX(0); }
+  to { transform: translateX(-140px); }
+}
+@keyframes orbit-spin {
+  to { transform: rotate(360deg); }
+}
+.pop-in {
+  animation: pop-in 500ms cubic-bezier(0.2, 0.8, 0.2, 1.2) both;
+}
+.pop-out {
+  animation: pop-out 300ms ease-in both;
+}
+.planet-surface {
+  animation: planet-surface 6s linear infinite;
+}
+.orbit-spin {
+  animation: orbit-spin 40s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pop-in, .pop-out, .planet-surface, .orbit-spin {
+    animation: none;
+  }
+}

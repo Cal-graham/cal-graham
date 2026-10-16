@@ -30,15 +30,15 @@ export const EXPERIENCES: ExperienceItem[] = [
           'Built a roadmap to scale operations with 2.5x organic revenue growth over 5 years, addressing operational challenges and **saving $1.8M/yr** in improved efficiencies.',
           'Identified **$8.2M of raw material waste** within a commercial food packer.',
           'Pinpointed a previously unknown phenomenon in a decades-old process **causing 10% of waste** at a highly regulated medical manufacturing site.',
-          'Proposed and carried out a Carbon Accounting scope, using the GHG Protocol to **understand client impact**.'
+          'Proposed and carried out a Carbon Accounting scope, using the **GHG Protocol** to understand the emissions impact of work.'
         ]
       },
       {
         label: 'Global Tech Lead',
         text: 'Enacted improvements to accounting, cybersecurity and cloud services, designed and maintained financial dashboards, and developed custom software tools, such as:',
         subItems: [
-          'Created a cloud training pipeline (PatchCore) for anomaly detection in industrial settings, **enabling improvement teams to target low-frequency downtime events**.',
-          'Deployed AI-based research tools (an agentic pipeline and a RAG interface) to **support business development** through network mapping, lead selection and outreach generation.'
+          'Created a cloud training pipeline (PatchCore) for anomaly detection in industrial settings, enabling improvement teams to target low-frequency downtime events.',
+          'Deployed AI-based research tools (an agentic pipeline and a RAG interface) to support business development through network mapping, lead selection and outreach generation.'
         ]
       }
     ]

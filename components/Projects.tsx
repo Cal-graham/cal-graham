@@ -12,8 +12,8 @@ import ProjectMedia from './ProjectMedia';
 const NODE_CLOUD_SCALE = 1.0;
 
 // The graph opens as the 3D web and morphs into the 2D connection graph once it is fully in view
-const AUTO_SWITCH_VISIBLE_RATIO = 0.9;
-const AUTO_SWITCH_DELAY_MS = 900;
+const AUTO_SWITCH_VISIBLE_RATIO = 0.25;
+const AUTO_SWITCH_DELAY_MS = 500;
 const CALLOUT_MS = 7000;
 
 // Modal behaviour: close on Escape, lock page scroll, focus the close button
@@ -137,7 +137,7 @@ const Projects: React.FC = () => {
 
   const isGraph = view !== 'grid';
 
-  // Morph from the 3D web to the 2D connection graph the first time the graph is fully in view
+  // Morph from the 3D web to the 2D connection graph the first time the graph scrolls into view
   useEffect(() => {
     const el = graphRef.current;
     if (!isGraph || !el || autoSwitchedRef.current || visitorTookOverRef.current) return;

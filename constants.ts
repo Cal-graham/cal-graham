@@ -126,10 +126,10 @@ export const SKILLS: SkillCategory[] = [
 export const PROJECTS: ProjectItem[] = [
   {
     id: 'OutreachAI',
-    title: 'Agentic AI Tools',
-    categories: ['Agentic AI', 'RAG', 'Python', 'Google Cloud Platform', 'Tavily API'],
-    description: 'Built AI research tools that automated one of the largest time-sinks in our business development pipeline. An agentic pipeline on Google Cloud Platform uses web research tools such as the Tavily API for network mapping and lead selection, and a RAG interface helps generate outreach, replacing discovery work that was previously done by hand.',
-    technologies: ['AI', 'Python', 'Cloud (GCP)'],
+    title: 'Business Development Agent',
+    categories: ['Agentic AI', 'RAG', 'Python', 'Google Cloud Platform', 'Tavily API', 'Brightdata API'],
+    description: "Built AI research tools that automated the slowest segment of my company's business development process. An agentic pipeline on Google Cloud Platform uses web research tools such as the Tavily API for warm network mapping and lead generation, and a RAG interface helps generate outreach, replacing discovery work that was previously done manually.",
+    technologies: ['AI', 'Python', 'Cloud (GCP)', 'REST API'],
     imageUrl: './outreach-app.jpg',
     hoverImageUrl: './outreach-app.jpg',
     videoUrl: './outreach-app.mp4'
